@@ -1,0 +1,1 @@
+# store77-checker-bot
