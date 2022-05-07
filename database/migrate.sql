@@ -4,6 +4,7 @@ CREATE TABLE products
     created Datetime,
     name Utf8,
     url Utf8,
+    store Utf8,
     PRIMARY KEY (id)
 );
 
