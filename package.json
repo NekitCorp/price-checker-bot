@@ -1,10 +1,10 @@
 {
-    "name": "store77-checker-bot",
+    "name": "price-checker-bot",
     "private": true,
     "version": "1.0.0",
     "scripts": {
-        "start": "nodemon --signal SIGHUP dev.ts",
-        "migrate-test-data": "ts-node migrate-test-data.ts"
+        "start-bot": "nodemon --signal SIGHUP dev/start-telegram-bot.ts",
+        "migrate-test-data": "ts-node dev/migrate-test-data.ts"
     },
     "dependencies": {
         "dayjs": "^1.11.2",

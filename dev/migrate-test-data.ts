@@ -2,10 +2,10 @@ require('dotenv-flow').config();
 
 import dayjs from 'dayjs';
 import { Session } from 'ydb-sdk';
-import { driver } from './db-driver';
-import { Price } from './entities/price';
-import { Product } from './entities/product';
-import { Subscription } from './entities/subscription';
+import { driver } from '../database/db-driver';
+import { Price } from '../database/entities/price';
+import { Product } from '../database/entities/product';
+import { Subscription } from '../database/entities/subscription';
 
 const TABLES = [Product.TABLE_NAME, Price.TABLE_NAME, Subscription.TABLE_NAME];
 
