@@ -30,3 +30,7 @@ typings/
 
 # Build output
 build/
+
+# Yandex Database local development
+ydb_certs
+ydb_data
