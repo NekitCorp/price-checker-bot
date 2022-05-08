@@ -72,7 +72,12 @@ export class TelegramBot {
         Object.entries(commands).forEach(([command, handler]) => {
             return this.bot.command(command, (ctx) => {
                 console.log(`[BOT_HANDLER] Start command ${command} processing...`);
-                return handler(ctx);
+                try {
+                    return handler(ctx);
+                } catch (error) {
+                    console.error(error);
+                    ctx.reply('😿 Похоже что-то пошло не так...');
+                }
             });
         });
 
@@ -80,14 +85,24 @@ export class TelegramBot {
         Object.entries(actions).forEach(([action, { trigger, handler }]) => {
             return this.bot.action(trigger, (ctx) => {
                 console.log(`[BOT_HANDLER] Start action ${action} processing...`);
-                return handler(ctx);
+                try {
+                    return handler(ctx);
+                } catch (error) {
+                    console.error(error);
+                    ctx.reply('😿 Похоже что-то пошло не так...');
+                }
             });
         });
 
         // register text
         this.bot.on('text', (ctx) => {
             console.log(`[BOT_HANDLER] Start text handler processing...`);
-            return textHandler(ctx);
+            try {
+                return textHandler(ctx);
+            } catch (error) {
+                console.error(error);
+                ctx.reply('😿 Похоже что-то пошло не так...');
+            }
         });
     }
 }

@@ -51,6 +51,22 @@ export class Subscription extends TypedData {
         });
     }
 
+    public static async get(
+        driver: DbDriver,
+        data: Pick<ISubscription, 'chatId' | 'productId'>,
+    ): Promise<Subscription | null> {
+        return await driver.withSession(async (session) => {
+            const query = `
+                SELECT *
+                FROM ${Subscription.TABLE_NAME}
+                WHERE chat_id = ${data.chatId} AND product_id = "${data.productId}"`;
+            const { resultSets } = await session.executeQuery(query);
+            const subscriptions = Subscription.createNativeObjects(resultSets[0]) as Subscription[];
+
+            return subscriptions[0] ? subscriptions[0] : null;
+        });
+    }
+
     public static async getAll(driver: DbDriver) {
         return await driver.withSession(async (session) => {
             const query = `

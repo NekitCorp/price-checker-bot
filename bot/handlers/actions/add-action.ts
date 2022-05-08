@@ -13,7 +13,7 @@ export async function addActionHandler(ctx: ActionContext) {
     const store = data.replace(`${Action.Add} `, '') as Store;
 
     if (ctx.chatState) {
-        ctx.reply(`❌ Ошибка. Состояние чата: ${ctx.chatState.state}.`);
+        ctx.reply(`❌ Ошибка. Неверное состояние чата: ${ctx.chatState.state}.`);
         return;
     }
 
@@ -21,9 +21,6 @@ export async function addActionHandler(ctx: ActionContext) {
 
     ctx.deleteMessage();
 
-    const message = `⌛ Пришлите мне ссылку с товаром.
-    
-💡 Пример ссылки: ${getStoreExampleLink(store)}`;
-
+    const message = `⌛ Пришлите мне ссылку с товаром.\n\n💡 Пример ссылки: ${getStoreExampleLink(store)}`;
     ctx.reply(message, { disable_web_page_preview: true });
 }

@@ -16,7 +16,7 @@ export class Store77Provider implements IStoreProvider {
             html = response.data;
         } catch (error) {
             console.error(error);
-            throw new Error(`Не удалось получить страницу ${url}`);
+            throw new Error('Не удалось получить страницу.');
         }
 
         let dom: HTMLElement;
@@ -24,22 +24,22 @@ export class Store77Provider implements IStoreProvider {
             dom = parse(html);
         } catch (error) {
             console.error(error);
-            throw new Error(`Не удалось разобрать страницу ${url}`);
+            throw new Error('Не удалось разобрать страницу.');
         }
 
         const id = dom.querySelector('[data-type="addBasket"]')?.getAttribute('data-id');
         if (!id) {
-            throw new Error('Не удалось найти название код товара');
+            throw new Error('Не удалось найти название код товара.');
         }
 
         const name = dom.querySelector('h1.title_card_product')?.innerText;
         if (!name) {
-            throw new Error('Не удалось найти название товара');
+            throw new Error('Не удалось найти название товара.');
         }
 
         const price = parseInt(dom.querySelector('.price_title_product')?.innerText.replace(/[^0-9]/g, '') ?? '');
         if (!price) {
-            throw new Error('Не удалось найти цену товара');
+            throw new Error('Не удалось найти цену товара.');
         }
 
         return {
