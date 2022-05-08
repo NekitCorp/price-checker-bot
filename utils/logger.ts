@@ -2,7 +2,7 @@ import { isYandexCloudFunction } from './yandex-cloud';
 
 class LoggerService {
     public error(message: unknown, ...optionalParams: unknown[]): void {
-        console.error(this.prepareMessage(message), ...this.prepareOptionalParams(optionalParams));
+        console.error('[ERROR]', this.prepareMessage(message), ...this.prepareOptionalParams(optionalParams));
     }
 
     public log(message: unknown, ...optionalParams: unknown[]): void {
