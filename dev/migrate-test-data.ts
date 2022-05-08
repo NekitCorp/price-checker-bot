@@ -54,7 +54,7 @@ async function migrate() {
 
     console.log('Creating subscriptions...');
     await Subscription.create({ productId: '668506', chatId: 276071981 }).insert(driver);
-    await Subscription.create({ productId: '700880', chatId: 276071981 }).insert(driver);
+    await Subscription.create({ productId: '531733', chatId: 276071981 }).insert(driver);
 }
 
 driver.withSession(async (session) => {

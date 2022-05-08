@@ -3,7 +3,7 @@ import { getStoreName } from '../../../utils/store';
 import { Action, CommandContext } from '../types';
 
 export async function addCommandHandler(ctx: CommandContext) {
-    ctx.reply('Выберите магазин:', {
+    ctx.reply('🛍️ Выберите магазин:', {
         reply_markup: {
             inline_keyboard: [
                 Object.values(Store).map((store) => ({

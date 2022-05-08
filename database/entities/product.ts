@@ -85,10 +85,10 @@ export class Product extends TypedData {
     public static async get(driver: DbDriver, data: Pick<IProduct, 'id'>): Promise<Product | null> {
         return await driver.withSession(async (session) => {
             const query = `
-                    SELECT ${Product.TABLE_NAME}.*
-                    FROM ${Product.TABLE_NAME}
-                    WHERE id = "${data.id}"
-                `;
+                SELECT ${Product.TABLE_NAME}.*
+                FROM ${Product.TABLE_NAME}
+                WHERE id = "${data.id}"
+            `;
             const { resultSets } = await session.executeQuery(query);
             const products = Product.createNativeObjects(resultSets[0]) as Product[];
 

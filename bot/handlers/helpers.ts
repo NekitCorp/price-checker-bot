@@ -8,7 +8,7 @@ export const HELP_MESSAGE = `Я бот для мониторинга цен в �
 🔼 - цена на товар повысилась
 🔽 - цена на товар снизилась
 
-*Список доступных команд:*
+💡 *Список доступных команд:*
 /${Command.Help} - помощь
 /${Command.List} - список отслеживаемых товаров
 /${Command.Add} - добавить новый товар для отслеживания
@@ -18,7 +18,7 @@ export async function replySubscribesList(ctx: MyContext) {
     const subscriptions = await Subscription.getByUser(driver, { chatId: ctx.chatId });
 
     if (subscriptions.length === 0) {
-        ctx.reply(`У вас пока нет отслеживаемых товаров. Для добавления воспользуйтесь командой /${Command.Add}.`);
+        ctx.reply(`😶 У вас пока нет отслеживаемых товаров. Для добавления воспользуйтесь командой /${Command.Add}.`);
         return;
     }
 
@@ -26,7 +26,7 @@ export async function replySubscribesList(ctx: MyContext) {
         '🔔 Список текущих подписок:' +
         '\n' +
         '\n' +
-        subscriptions.map((sub) => `\`${sub.productId}\` [[${sub.store}]] ${sub.name}`).join('\n');
+        subscriptions.map((sub) => `• \`${sub.productId}\` [[${sub.store}]] ${sub.name}`).join('\n');
 
     ctx.reply(message, {
         reply_markup: {

@@ -1,5 +1,6 @@
 import { declareType, snakeToCamelCaseConversion, TypedData, Types, withTypeOptions } from 'ydb-sdk';
 import { DbDriver } from '../db-driver';
+import { DateFilter } from './filters';
 
 interface IPrice {
     productId: string;
@@ -73,6 +74,29 @@ export class Price extends TypedData {
                 WHERE row_number <= 2`;
 
             const { resultSets } = await session.executeQuery(query);
+            return Price.createNativeObjects(resultSets[0]) as Price[];
+        });
+    }
+
+    /** Получить все цены во временном промежутке от `from` до `to` */
+    public static async getByDate(driver: DbDriver, data: { from: Date; to: Date }): Promise<Price[]> {
+        return await driver.withSession(async (session) => {
+            const query = `
+                DECLARE $from as Datetime;
+                DECLARE $to as Datetime;
+
+                SELECT *
+                FROM ${Price.TABLE_NAME}
+                WHERE created BETWEEN $from AND $to
+                ORDER BY created DESC
+            `;
+            const preparedQuery = await session.prepareQuery(query);
+            const filter = new DateFilter(data);
+
+            const { resultSets } = await session.executeQuery(preparedQuery, {
+                $from: filter.getTypedValue('from'),
+                $to: filter.getTypedValue('to'),
+            });
             return Price.createNativeObjects(resultSets[0]) as Price[];
         });
     }

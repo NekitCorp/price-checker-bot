@@ -6,7 +6,7 @@ import { Action, ActionContext } from '../types';
 export async function subscriptionDetailActionHandler(ctx: ActionContext) {
     const data = ctx.callbackQuery?.data;
     if (!data) {
-        ctx.reply('Ошибка. Не найдены данные callbackQuery.');
+        ctx.reply('❌ Ошибка. Не найдены данные callbackQuery.');
         return;
     }
 
@@ -16,7 +16,7 @@ export async function subscriptionDetailActionHandler(ctx: ActionContext) {
     );
 
     if (!subscription) {
-        ctx.reply('Ошибка. Подписка не найдена.');
+        ctx.reply('❌ Ошибка. Подписка не найдена.');
         return;
     }
 

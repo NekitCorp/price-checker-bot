@@ -1,8 +1,11 @@
 import { Context, Telegraf } from 'telegraf';
+import { Update } from 'telegraf/typings/core/types/typegram';
+import { ExtraReplyMessage } from 'telegraf/typings/telegram-types';
 import { driver } from '../database/db-driver';
 import { ChatState } from '../database/entities/chat-state';
 import { actions, commands } from './handlers';
 import { textHandler } from './handlers/text-handler';
+import { triggerHandler } from './handlers/trigger-handler';
 
 export interface MyContext extends Context {
     chatId: number;
@@ -26,6 +29,19 @@ export class TelegramBot {
         console.log(`Telegram bot ${this.bot.botInfo?.first_name} stops...`);
         this.bot.stop(reason);
         console.log(`Telegram bot ${this.bot.botInfo?.first_name} stopped.`);
+    }
+
+    public sendMessage(chatId: string | number, text: string, extra?: ExtraReplyMessage) {
+        return this.bot.telegram.sendMessage(chatId, text, extra);
+    }
+
+    public update(update: Update) {
+        return this.bot.handleUpdate(update);
+    }
+
+    public trigger() {
+        console.log('[BOT_HANDLER] Trigger handler processing...');
+        return triggerHandler(this);
     }
 
     private registerMiddlewares() {

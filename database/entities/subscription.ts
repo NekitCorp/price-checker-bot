@@ -51,11 +51,15 @@ export class Subscription extends TypedData {
         });
     }
 
-    public static async getAll(driver: DbDriver): Promise<Subscription[]> {
+    public static async getAll(driver: DbDriver) {
         return await driver.withSession(async (session) => {
-            const query = `SELECT * FROM ${Subscription.TABLE_NAME}`;
+            const query = `
+                SELECT ${Subscription.TABLE_NAME}.*, name, store, url
+                FROM ${Subscription.TABLE_NAME}
+                INNER JOIN ${Product.TABLE_NAME} ON ${Product.TABLE_NAME}.id = ${Subscription.TABLE_NAME}.product_id`;
             const { resultSets } = await session.executeQuery(query);
-            return Subscription.createNativeObjects(resultSets[0]) as Subscription[];
+            return Subscription.createNativeObjects(resultSets[0]) as (Subscription &
+                Pick<IProduct, 'name' | 'store' | 'url'>)[];
         });
     }
 

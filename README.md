@@ -23,5 +23,17 @@ docker run -d --rm --name ydb-local -h localhost \
 4. [`optional`] Мигрировать тестовые данные
 
 ```sh
-npm start migrate-test-data
+npm run migrate-test-data
+```
+
+5. Запустить телеграм-бота
+
+```sh
+npm run start-bot
+```
+
+6. [`optional`] Имитировать ежедневный триггер
+
+```sh
+npm run trigger
 ```
