@@ -1,6 +1,8 @@
+import { addActionHandler } from './actions/add-action';
 import { listActionHandler } from './actions/list-action';
 import { removeActionHandler } from './actions/remove-action';
 import { subscriptionDetailActionHandler } from './actions/subscription-detail-action';
+import { addCommandHandler } from './commands/add-command';
 import { helpCommandHandler } from './commands/help-command';
 import { listCommandHandler } from './commands/list-command';
 import { startCommandHandler } from './commands/start-command';
@@ -10,7 +12,7 @@ export const commands: Record<Command, (ctx: CommandContext) => Promise<void> | 
     [Command.Start]: startCommandHandler,
     [Command.Help]: helpCommandHandler,
     [Command.List]: listCommandHandler,
-    [Command.Add]: () => {},
+    [Command.Add]: addCommandHandler,
 };
 
 export const actions: Record<Action, { trigger: Triggers; handler: (ctx: ActionContext) => Promise<void> | void }> = {
@@ -25,5 +27,9 @@ export const actions: Record<Action, { trigger: Triggers; handler: (ctx: ActionC
     [Action.Remove]: {
         trigger: new RegExp(`^${Action.Remove}\\s{1}[0-9]+$`),
         handler: removeActionHandler,
+    },
+    [Action.Add]: {
+        trigger: new RegExp(`^${Action.Add}\\s{1}[a-zA-Z0-9]+$`),
+        handler: addActionHandler,
     },
 };

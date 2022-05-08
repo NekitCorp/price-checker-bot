@@ -3,11 +3,12 @@ require('dotenv-flow').config();
 import dayjs from 'dayjs';
 import { Session } from 'ydb-sdk';
 import { driver } from '../database/db-driver';
+import { ChatState } from '../database/entities/chat-state';
 import { Price } from '../database/entities/price';
 import { Product, Store } from '../database/entities/product';
 import { Subscription } from '../database/entities/subscription';
 
-const TABLES = [Product.TABLE_NAME, Price.TABLE_NAME, Subscription.TABLE_NAME];
+const TABLES = [Product.TABLE_NAME, Price.TABLE_NAME, Subscription.TABLE_NAME, ChatState.TABLE_NAME];
 
 async function clear(session: Session) {
     for await (const table of TABLES) {

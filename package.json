@@ -3,7 +3,7 @@
     "private": true,
     "version": "1.0.0",
     "scripts": {
-        "start-bot": "nodemon --signal SIGHUP dev/start-telegram-bot.ts",
+        "start-bot": "nodemon --signal SIGHUP --files dev/start-telegram-bot.ts",
         "migrate-test-data": "ts-node dev/migrate-test-data.ts",
         "update-prices": "ts-node --files dev/update-prices.ts"
     },

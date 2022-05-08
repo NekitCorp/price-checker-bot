@@ -4,19 +4,13 @@ import { Subscription } from '../../../database/entities/subscription';
 import { Action, ActionContext } from '../types';
 
 export async function subscriptionDetailActionHandler(ctx: ActionContext) {
-    const chatId = ctx.chat?.id || ctx.from?.id;
-    if (!chatId) {
-        ctx.reply('Ошибка. Не найден идентификатор чата.');
-        return;
-    }
-
     const data = ctx.callbackQuery?.data;
     if (!data) {
         ctx.reply('Ошибка. Не найдены данные callbackQuery.');
         return;
     }
 
-    const subscriptions = await Subscription.getByUser(driver, { chatId });
+    const subscriptions = await Subscription.getByUser(driver, { chatId: ctx.chatId });
     const subscription = subscriptions.find(
         (sub) => sub.productId === data.replace(`${Action.SubscriptionDetail} `, ''),
     );

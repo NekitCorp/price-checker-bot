@@ -23,3 +23,12 @@ CREATE TABLE subscriptions
     created Datetime,
     PRIMARY KEY (product_id, chat_id)
 );
+
+CREATE TABLE chat_states
+(
+    chat_id Uint64,
+    state Utf8,
+    store Utf8,
+    created Datetime,
+    PRIMARY KEY (chat_id)
+);
