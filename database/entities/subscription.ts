@@ -1,5 +1,6 @@
 import { declareType, snakeToCamelCaseConversion, TypedData, Types, withTypeOptions } from 'ydb-sdk';
 import { DbDriver } from '../db-driver';
+import { IProduct, Product } from './product';
 
 interface ISubscription {
     productId: string;
@@ -58,11 +59,16 @@ export class Subscription extends TypedData {
         });
     }
 
-    public static async getByUser(driver: DbDriver, chatId: string): Promise<Subscription[]> {
+    public static async getByUser(driver: DbDriver, data: Pick<ISubscription, 'chatId'>) {
         return await driver.withSession(async (session) => {
-            const query = `SELECT * FROM ${Subscription.TABLE_NAME} WHERE chat_id = "${chatId}"`;
+            const query = `
+                SELECT ${Subscription.TABLE_NAME}.*, name, store, url
+                FROM ${Subscription.TABLE_NAME}
+                INNER JOIN ${Product.TABLE_NAME} ON ${Product.TABLE_NAME}.id = ${Subscription.TABLE_NAME}.product_id
+                WHERE chat_id = ${data.chatId}`;
             const { resultSets } = await session.executeQuery(query);
-            return Subscription.createNativeObjects(resultSets[0]) as Subscription[];
+            return Subscription.createNativeObjects(resultSets[0]) as (Subscription &
+                Pick<IProduct, 'name' | 'store' | 'url'>)[];
         });
     }
 

@@ -6,7 +6,7 @@ export enum Store {
     Store77 = 'Store77',
 }
 
-interface IProduct {
+export interface IProduct {
     id: string;
     created: Date;
     name: string;
