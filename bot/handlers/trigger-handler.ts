@@ -4,6 +4,7 @@ import { Price } from '../../database/entities/price';
 import { Product } from '../../database/entities/product';
 import { Subscription } from '../../database/entities/subscription';
 import { getStoreProvider } from '../../store/provider';
+import { logger } from '../../utils/logger';
 import { numberWithSpaces } from '../../utils/number';
 import { escapeMessage } from '../../utils/telegram';
 import { TelegramBot } from '../telegram-bot';
@@ -17,9 +18,9 @@ export async function triggerHandler(bot: TelegramBot) {
         try {
             const data = await storeProvider.getData(product.url);
             await data.price.insert(driver);
-            console.log(`New price added for product "${data.product.name}" [${data.product.id}]: ${data.price.price}`);
+            logger.log(`New price added for product "${data.product.name}" [${data.product.id}]: ${data.price.price}`);
         } catch (error) {
-            console.log(error);
+            logger.log(error);
         }
     }
 
@@ -29,7 +30,7 @@ export async function triggerHandler(bot: TelegramBot) {
         {},
     );
 
-    console.log(`Current subscriptions: `, chatSubscriptions);
+    logger.log(`Current subscriptions: `, chatSubscriptions);
 
     const today = dayjs().hour(0).minute(0).second(0);
     const tomorrow = today.add(1, 'day');
@@ -42,7 +43,7 @@ export async function triggerHandler(bot: TelegramBot) {
         return yesterdayPrice ? { ...acc, [productId]: [todayPrice, yesterdayPrice] } : acc;
     }, {});
 
-    console.log(`Available prices: `, availablePrices);
+    logger.log(`Available prices: `, availablePrices);
 
     const messages = Object.entries(chatSubscriptions)
         .map(([chatId, subs]) => {

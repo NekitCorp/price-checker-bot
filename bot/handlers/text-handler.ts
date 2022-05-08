@@ -4,6 +4,7 @@ import { Price } from '../../database/entities/price';
 import { Product } from '../../database/entities/product';
 import { Subscription } from '../../database/entities/subscription';
 import { getStoreProvider } from '../../store/provider';
+import { logger } from '../../utils/logger';
 import { getStoreExampleLink, getStoreLinkRegExp } from '../../utils/store';
 import { Command, CommandContext } from './types';
 
@@ -32,7 +33,7 @@ async function addProductHandler(ctx: CommandContext, chatState: ChatState) {
         product = data.product;
         price = data.price;
     } catch (error) {
-        console.error(error);
+        logger.error(error);
         return ctx.reply(`😭 Ошибка. ${error}`);
     }
 

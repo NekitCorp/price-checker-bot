@@ -7,19 +7,20 @@ import { ChatState } from '../database/entities/chat-state';
 import { Price } from '../database/entities/price';
 import { Product, Store } from '../database/entities/product';
 import { Subscription } from '../database/entities/subscription';
+import { logger } from '../utils/logger';
 
 const TABLES = [Product.TABLE_NAME, Price.TABLE_NAME, Subscription.TABLE_NAME, ChatState.TABLE_NAME];
 
 async function clear(session: Session) {
     for await (const table of TABLES) {
-        console.log(`Deleting data from a table ${table}...`);
+        logger.log(`Deleting data from a table ${table}...`);
         const query = `DELETE FROM ${table};`;
         await session.executeQuery(query);
     }
 }
 
 async function migrate() {
-    console.log('Creating products...');
+    logger.log('Creating products...');
     await Product.create({
         id: '531733',
         name: 'Ноутбук Apple MacBook Air (M1 8C CPU/7C GPU, 16Гб, 256Гб SSD) Золотой Z12A0008QRU/A',
@@ -39,7 +40,7 @@ async function migrate() {
         store: Store.Store77,
     }).insert(driver);
 
-    console.log('Creating prices...');
+    logger.log('Creating prices...');
     const today = dayjs().hour(10).minute(0);
     // 8-531733
     await new Price({ productId: '531733', price: 130980, created: today.toDate() }).insert(driver);
@@ -52,7 +53,7 @@ async function migrate() {
     // 700880
     await new Price({ productId: '700880', price: 30740, created: today.toDate() }).insert(driver);
 
-    console.log('Creating subscriptions...');
+    logger.log('Creating subscriptions...');
     await Subscription.create({ productId: '668506', chatId: 276071981 }).insert(driver);
     await Subscription.create({ productId: '531733', chatId: 276071981 }).insert(driver);
 }
@@ -61,7 +62,7 @@ driver.withSession(async (session) => {
     await clear(session);
     await migrate();
 
-    console.log('Successful data migration');
+    logger.log('Successful data migration');
 
     process.exit();
 });

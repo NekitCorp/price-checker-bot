@@ -1,4 +1,5 @@
 import { TelegramBot } from './bot/telegram-bot';
+import { logger } from './utils/logger';
 import { ICloudContext, ICloudEvent, isTriggerEvent } from './utils/yandex-cloud';
 
 if (!process.env.BOT_TOKEN) {
@@ -11,7 +12,7 @@ const bot = new TelegramBot(process.env.BOT_TOKEN);
  * Handler for Yandex Cloud Function
  */
 module.exports.handler = async function (event: ICloudEvent, context: ICloudContext) {
-    console.log(`REQUEST: ${JSON.stringify(event)}`);
+    logger.log('[CLOUD_EVENT]', event);
 
     const isTrigger = isTriggerEvent(event);
     const message = event.body && JSON.parse(event.body);

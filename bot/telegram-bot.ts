@@ -3,6 +3,7 @@ import { Update } from 'telegraf/typings/core/types/typegram';
 import { ExtraReplyMessage } from 'telegraf/typings/telegram-types';
 import { driver } from '../database/db-driver';
 import { ChatState } from '../database/entities/chat-state';
+import { logger } from '../utils/logger';
 import { actions, commands } from './handlers';
 import { textHandler } from './handlers/text-handler';
 import { triggerHandler } from './handlers/trigger-handler';
@@ -22,13 +23,13 @@ export class TelegramBot {
     }
 
     public launch() {
-        this.bot.launch().then(() => console.log(`Telegram bot ${this.bot.botInfo?.first_name} is running.`));
+        this.bot.launch().then(() => logger.log(`Telegram bot ${this.bot.botInfo?.first_name} is running.`));
     }
 
     public stop(reason?: string) {
-        console.log(`Telegram bot ${this.bot.botInfo?.first_name} stops...`);
+        logger.log(`Telegram bot ${this.bot.botInfo?.first_name} stops...`);
         this.bot.stop(reason);
-        console.log(`Telegram bot ${this.bot.botInfo?.first_name} stopped.`);
+        logger.log(`Telegram bot ${this.bot.botInfo?.first_name} stopped.`);
     }
 
     public sendMessage(chatId: string | number, text: string, extra?: ExtraReplyMessage) {
@@ -40,23 +41,23 @@ export class TelegramBot {
     }
 
     public trigger() {
-        console.log('[BOT_HANDLER] Trigger handler processing...');
+        logger.log('[BOT_HANDLER] Trigger handler processing...');
         return triggerHandler(this);
     }
 
     private registerMiddlewares() {
         this.bot.use(async (ctx, next) => {
-            console.log(ctx.update);
-            console.time(`Processing update ${ctx.update.update_id}`);
+            logger.log('[TELEGRAM_UPDATE]', ctx.update);
+            logger.time(`Processing update ${ctx.update.update_id}`);
             await next();
-            console.timeEnd(`Processing update ${ctx.update.update_id}`);
+            logger.timeEnd(`Processing update ${ctx.update.update_id}`);
         });
 
         this.bot.use(async (ctx, next) => {
             const chatId = ctx.chat?.id || ctx.from?.id;
 
             if (!chatId) {
-                ctx.reply('Ошибка. Не найден идентификатор чата.');
+                ctx.reply('❌ Ошибка. Не найден идентификатор чата.');
                 return;
             }
 
@@ -71,11 +72,11 @@ export class TelegramBot {
         // register commands
         Object.entries(commands).forEach(([command, handler]) => {
             return this.bot.command(command, (ctx) => {
-                console.log(`[BOT_HANDLER] Start command ${command} processing...`);
+                logger.log(`[BOT_HANDLER] Start command ${command} processing...`);
                 try {
                     return handler(ctx);
                 } catch (error) {
-                    console.error(error);
+                    logger.error(error);
                     ctx.reply('😿 Похоже что-то пошло не так...');
                 }
             });
@@ -84,11 +85,11 @@ export class TelegramBot {
         // register actions
         Object.entries(actions).forEach(([action, { trigger, handler }]) => {
             return this.bot.action(trigger, (ctx) => {
-                console.log(`[BOT_HANDLER] Start action ${action} processing...`);
+                logger.log(`[BOT_HANDLER] Start action ${action} processing...`);
                 try {
                     return handler(ctx);
                 } catch (error) {
-                    console.error(error);
+                    logger.error(error);
                     ctx.reply('😿 Похоже что-то пошло не так...');
                 }
             });
@@ -96,11 +97,11 @@ export class TelegramBot {
 
         // register text
         this.bot.on('text', (ctx) => {
-            console.log(`[BOT_HANDLER] Start text handler processing...`);
+            logger.log(`[BOT_HANDLER] Start text handler processing...`);
             try {
                 return textHandler(ctx);
             } catch (error) {
-                console.error(error);
+                logger.error(error);
                 ctx.reply('😿 Похоже что-то пошло не так...');
             }
         });

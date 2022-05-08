@@ -3,6 +3,7 @@ import https from 'https';
 import { HTMLElement, parse } from 'node-html-parser';
 import { Price } from '../../database/entities/price';
 import { Product, Store } from '../../database/entities/product';
+import { logger } from '../../utils/logger';
 import { IStoreProvider } from '../provider';
 
 // https://stackoverflow.com/questions/51363855/how-to-configure-axios-to-use-ssl-certificate
@@ -15,7 +16,7 @@ export class Store77Provider implements IStoreProvider {
             const response = await axios.get<string>(url, { httpsAgent });
             html = response.data;
         } catch (error) {
-            console.error(error);
+            logger.error(error);
             throw new Error('Не удалось получить страницу.');
         }
 
@@ -23,7 +24,7 @@ export class Store77Provider implements IStoreProvider {
         try {
             dom = parse(html);
         } catch (error) {
-            console.error(error);
+            logger.error(error);
             throw new Error('Не удалось разобрать страницу.');
         }
 
