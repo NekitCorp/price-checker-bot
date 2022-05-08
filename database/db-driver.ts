@@ -1,4 +1,5 @@
 import { AnonymousAuthService, Driver, getCredentialsFromEnv, getLogger, Session } from 'ydb-sdk';
+import { isYandexCloudFunction } from '../utils/yandex-cloud';
 
 const TIMEOUT = 10000;
 
@@ -9,15 +10,10 @@ export class DbDriver {
      */
     private readonly endpoint: string;
     /**
-     * Эндпоинт
-     * @description https://cloud.yandex.ru/docs/ydb/concepts/connect#endpoint
-     */
-    private readonly database: string;
-    /**
      * Размещение базы данных
      * @description https://cloud.yandex.ru/docs/ydb/concepts/connect#database
      */
-    private readonly isYandexCloudFunction = Boolean(process.env._HANDLER);
+    private readonly database: string;
     private driver: Driver | null = null;
     private isDriverReady: Promise<boolean> = Promise.resolve(false);
 
@@ -36,7 +32,7 @@ export class DbDriver {
 
     public async init() {
         const logger = getLogger();
-        const authService = this.isYandexCloudFunction ? getCredentialsFromEnv(logger) : new AnonymousAuthService();
+        const authService = isYandexCloudFunction ? getCredentialsFromEnv(logger) : new AnonymousAuthService();
 
         this.driver = new Driver({ endpoint: this.endpoint, database: this.database, authService });
         this.isDriverReady = this.driver.ready(TIMEOUT);

@@ -1,3 +1,5 @@
+import { isYandexCloudFunction } from './yandex-cloud';
+
 class LoggerService {
     public error(message: unknown, ...optionalParams: unknown[]): void {
         console.error(this.prepareMessage(message), ...this.prepareOptionalParams(optionalParams));
@@ -16,11 +18,11 @@ class LoggerService {
     }
 
     private prepareMessage(message: unknown) {
-        return process.env.NODE_ENV === 'production' ? JSON.stringify(message) : message;
+        return isYandexCloudFunction ? JSON.stringify(message) : message;
     }
 
     private prepareOptionalParams(optionalParams: unknown[]) {
-        return process.env.NODE_ENV === 'production' ? optionalParams.map((p) => JSON.stringify(p)) : optionalParams;
+        return isYandexCloudFunction ? optionalParams.map((p) => JSON.stringify(p)) : optionalParams;
     }
 }
 

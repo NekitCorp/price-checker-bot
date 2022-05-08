@@ -5,7 +5,7 @@ CREATE TABLE products
     name Utf8,
     url Utf8,
     store Utf8,
-    PRIMARY KEY (id)
+    PRIMARY KEY (id, store)
 );
 
 CREATE TABLE prices

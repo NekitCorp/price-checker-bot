@@ -67,3 +67,9 @@ export type ICloudResponse = {
 export const isTriggerEvent = (event: ICloudEvent) =>
     event?.messages &&
     event.messages[0]?.event_metadata?.event_type === 'yandex.cloud.events.serverless.triggers.TimerMessage';
+
+/**
+ * Функция вызвана в окружении Yandex Cloud
+ * @description https://cloud.yandex.ru/docs/functions/concepts/runtime/environment-variables
+ */
+export const isYandexCloudFunction = Boolean(process.env._HANDLER);
