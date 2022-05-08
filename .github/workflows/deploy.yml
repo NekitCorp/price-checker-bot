@@ -1,0 +1,34 @@
+name: Deploy
+
+on:
+    push:
+        branches:
+            - main
+
+jobs:
+    deploy:
+        runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                node-version: [16.x]
+        steps:
+            - uses: actions/checkout@v2
+            - uses: actions/setup-node@v2
+              with:
+                  node-version: ${{ matrix.node-version }}
+            # Build
+            - run: npm ci
+            - run: npm run build
+            - run: cp package.json build/package.json
+            # Deploy
+            - uses: goodsmileduck/yandex-serverless-action@v1
+              with:
+                  token: ${{ secrets.OAUTH_TOKEN }}
+                  function_id: ${{ secrets.CLOUD_FUNCTION_ID }}
+                  runtime: 'nodejs14'
+                  entrypoint: 'index.handler'
+                  environment: BOT_TOKEN=${{ secrets.BOT_TOKEN }},YDB_DATABASE=${{ secrets.YDB_DATABASE }},YDB_ENDPOINT=${{ secrets.YDB_ENDPOINT }}
+                  memory: '128'
+                  source: './build'
+                  execution_timeout: '10'
+                  service_account: ${{ secrets.SERVICE_ACCOUNT_ID }}

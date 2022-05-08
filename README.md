@@ -37,3 +37,25 @@ npm run start-bot
 ```sh
 npm run trigger
 ```
+
+## Инициализация Yandex Cloud
+
+> Инициализация проводится 1 раз при создании проекта, либо при переезде проекта в другой каталог облака. Для разработки в уже развернутом проекта данный пункт выполнять не нужно.
+
+1. Создать каталог в [консоли Yandex Cloud](https://console.cloud.yandex.ru/cloud)
+    - Имя: `price-checker-bot`
+2. Создать сервисный аккаунт
+    - Имя: `price-checker-bot-sa`
+    - Роль: `editor`
+3. Создать `Yandex Database`
+    - Имя: `price-checker-bot-ydb`
+    - Тип базы данных: `Serverless`
+4. Выполнить скрипт миграции `database/migrate.sql` в консоли `price-checker-bot-ydb`
+5. Создать `Cloud Function`
+    - Имя: `price-checker-bot-function`
+6. Создать триггер внутри функции `price-checker-bot-function`
+    - Имя: `price-checker-bot-trigger`
+    - Тип: `Таймер`
+    - Cron-выражение: `0 10 ? * * *`
+    - Функция: `price-checker-bot-function`
+    - Сервисный аккаунт: `price-checker-bot-sa`
