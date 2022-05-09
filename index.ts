@@ -1,12 +1,6 @@
-import { TelegramBot } from './bot/telegram-bot';
+import { telegramBot } from './bot/telegram-bot';
 import { logger } from './utils/logger';
 import { ICloudContext, ICloudEvent, isTriggerEvent } from './utils/yandex-cloud';
-
-if (!process.env.BOT_TOKEN) {
-    throw new Error('Environment variable `BOT_TOKEN` not provided');
-}
-
-const bot = new TelegramBot(process.env.BOT_TOKEN);
 
 /**
  * Handler for Yandex Cloud Function
@@ -18,9 +12,9 @@ module.exports.handler = async function (event: ICloudEvent, context: ICloudCont
     const message = event.body && JSON.parse(event.body);
 
     if (isTrigger) {
-        await bot.trigger();
+        await telegramBot.trigger();
     } else {
-        await bot.update(message);
+        await telegramBot.update(message);
     }
 
     return {

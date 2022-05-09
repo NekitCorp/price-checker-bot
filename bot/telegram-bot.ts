@@ -42,7 +42,11 @@ export class TelegramBot {
 
     public trigger() {
         logger.log('[BOT_HANDLER] Trigger handler processing...');
-        return triggerHandler(this);
+        try {
+            return triggerHandler(this);
+        } catch (error) {
+            logger.error(error, { scope: 'TRIGGER_ERROR' });
+        }
     }
 
     private registerMiddlewares() {
@@ -76,7 +80,7 @@ export class TelegramBot {
                 try {
                     return handler(ctx);
                 } catch (error) {
-                    logger.error(error);
+                    logger.error(error, { context: ctx });
                     ctx.reply('😿 Похоже что-то пошло не так...');
                 }
             });
@@ -89,7 +93,7 @@ export class TelegramBot {
                 try {
                     return handler(ctx);
                 } catch (error) {
-                    logger.error(error);
+                    logger.error(error, { context: ctx });
                     ctx.reply('😿 Похоже что-то пошло не так...');
                 }
             });
@@ -101,9 +105,15 @@ export class TelegramBot {
             try {
                 return textHandler(ctx);
             } catch (error) {
-                logger.error(error);
+                logger.error(error, { context: ctx });
                 ctx.reply('😿 Похоже что-то пошло не так...');
             }
         });
     }
 }
+
+if (!process.env.BOT_TOKEN) {
+    throw new Error('Environment variable `BOT_TOKEN` not provided');
+}
+
+export const telegramBot = new TelegramBot(process.env.BOT_TOKEN);

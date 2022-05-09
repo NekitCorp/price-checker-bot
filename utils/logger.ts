@@ -1,19 +1,40 @@
+import { MyContext, telegramBot } from '../bot/telegram-bot';
 import { isYandexCloudFunction } from './yandex-cloud';
 
 class LoggerService {
-    public error(message: unknown, ...optionalParams: unknown[]): void {
-        console.error('[ERROR]', this.prepareMessage(message), ...this.prepareOptionalParams(optionalParams));
+    constructor(private adminChatId: string) {}
+
+    public error(error: unknown, options?: { context?: MyContext; scope?: string }) {
+        const update = options?.context?.update;
+        const scope = options?.scope ?? 'ERROR';
+
+        const errorObj =
+            error instanceof Error
+                ? { message: error.message, stack: error.stack, update }
+                : { message: `${error}`, update };
+        const message = `[${scope}] ${JSON.stringify(errorObj)}`;
+
+        console.error(message);
+
+        telegramBot
+            .sendMessage(this.adminChatId, message)
+            .catch((err) => console.error(`[ERROR] Failed to send error message`, err));
     }
 
-    public log(message: unknown, ...optionalParams: unknown[]): void {
-        console.log(this.prepareMessage(message), ...this.prepareOptionalParams(optionalParams));
+    public log(...messages: unknown[]) {
+        try {
+            const data = isYandexCloudFunction ? messages.map((mes) => JSON.stringify(mes)) : messages;
+            console.log(...data);
+        } catch (error) {
+            this.error(error, { scope: 'LOG_ERROR' });
+        }
     }
 
-    public time(label?: string): void {
+    public time(label?: string) {
         console.time(label);
     }
 
-    public timeEnd(label?: string): void {
+    public timeEnd(label?: string) {
         console.timeEnd(label);
     }
 
@@ -26,4 +47,8 @@ class LoggerService {
     }
 }
 
-export const logger = new LoggerService();
+if (!process.env.ADMIN_CHAT_ID) {
+    throw new Error('Environment variable `ADMIN_CHAT_ID` not provided');
+}
+
+export const logger = new LoggerService(process.env.ADMIN_CHAT_ID);

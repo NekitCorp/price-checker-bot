@@ -59,7 +59,7 @@ npm run trigger
 7. Создать триггер внутри функции `price-checker-bot-function`
     - Имя: `price-checker-bot-trigger`
     - Тип: `Таймер`
-    - Cron-выражение: `0 10 ? * * *`
+    - Cron-выражение: `0 7 ? * * *` ([Формат cron-выражения](https://cloud.yandex.ru/docs/functions/concepts/trigger/timer#cron-expression))
     - Функция: `price-checker-bot-function`
     - Сервисный аккаунт: `price-checker-bot-sa`
 
@@ -67,7 +67,7 @@ npm run trigger
 
 Добавить `Actions secrets`:
 
-| `secret`             | `description`                                                                                                                                                                                       |
+| Secret               | Description                                                                                                                                                                                         |
 | -------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `BOT_TOKEN`          | Токен, который был получен от `BotFather` при создании бота.                                                                                                                                        |
 | `CLOUD_FUNCTION_ID`  | Идентификатор функции `price-checker-bot-function`.                                                                                                                                                 |
@@ -75,6 +75,7 @@ npm run trigger
 | `SERVICE_ACCOUNT_ID` | Идентификатор сервисного аккаунта `price-checker-bot-sa`.                                                                                                                                           |
 | `YDB_DATABASE`       | Размещение базы данных `price-checker-bot-ydb`.                                                                                                                                                     |
 | `YDB_ENDPOINT`       | Эндпоинт `price-checker-bot-ydb`.                                                                                                                                                                   |
+| `ADMIN_CHAT_ID`      | Идентификатор телеграм чата администратора для сбора ошибок.                                                                                                                                        |
 
 ### Инициализация Telegram
 

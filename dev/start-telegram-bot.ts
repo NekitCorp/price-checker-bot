@@ -1,15 +1,10 @@
 require('dotenv-flow').config();
 
-import { TelegramBot } from '../bot/telegram-bot';
+import { telegramBot } from '../bot/telegram-bot';
 
-if (!process.env.BOT_TOKEN) {
-    throw new Error('Environment variable `BOT_TOKEN` not provided');
-}
-
-const bot = new TelegramBot(process.env.BOT_TOKEN);
-bot.launch();
+telegramBot.launch();
 
 // Enable graceful stop
-process.once('SIGINT', () => bot.stop('SIGINT'));
-process.once('SIGTERM', () => bot.stop('SIGTERM'));
-process.once('SIGHUP', () => bot.stop('SIGHUP'));
+process.once('SIGINT', () => telegramBot.stop('SIGINT'));
+process.once('SIGTERM', () => telegramBot.stop('SIGTERM'));
+process.once('SIGHUP', () => telegramBot.stop('SIGHUP'));

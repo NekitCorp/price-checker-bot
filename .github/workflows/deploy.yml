@@ -27,7 +27,7 @@ jobs:
                   function_id: ${{ secrets.CLOUD_FUNCTION_ID }}
                   runtime: 'nodejs14'
                   entrypoint: 'index.handler'
-                  environment: BOT_TOKEN=${{ secrets.BOT_TOKEN }},YDB_DATABASE=${{ secrets.YDB_DATABASE }},YDB_ENDPOINT=${{ secrets.YDB_ENDPOINT }}
+                  environment: BOT_TOKEN=${{ secrets.BOT_TOKEN }},YDB_DATABASE=${{ secrets.YDB_DATABASE }},YDB_ENDPOINT=${{ secrets.YDB_ENDPOINT }},ADMIN_CHAT_ID=${{ secrets.ADMIN_CHAT_ID }}
                   memory: '128'
                   source: './build'
                   execution_timeout: '10'

@@ -6,7 +6,8 @@
         "start-bot": "nodemon --signal SIGHUP --files dev/start-telegram-bot.ts",
         "migrate-test-data": "ts-node --files dev/migrate-test-data.ts",
         "trigger": "ts-node --files dev/trigger.ts",
-        "build": "tsc"
+        "build": "tsc",
+        "tsc-check": "tsc --noEmit"
     },
     "dependencies": {
         "axios": "^0.27.2",
