@@ -1,10 +1,12 @@
 import { declareType, snakeToCamelCaseConversion, TypedData, Types, withTypeOptions } from 'ydb-sdk';
 import { DbDriver } from '../db-driver';
-import { IProduct, Product } from './product';
+import { IProduct, Product, ProductId } from './product';
+
+export type ChatId = number & { __brand: 'chat_id' };
 
 interface ISubscription {
-    productId: string;
-    chatId: number;
+    productId: ProductId;
+    chatId: ChatId;
     created: Date;
 }
 
@@ -13,10 +15,10 @@ export class Subscription extends TypedData {
     public static TABLE_NAME = 'subscriptions';
 
     @declareType(Types.UTF8)
-    public productId: string;
+    public productId: ProductId;
 
     @declareType(Types.UINT64)
-    public chatId: number;
+    public chatId: ChatId;
 
     @declareType(Types.DATETIME)
     public created: Date;

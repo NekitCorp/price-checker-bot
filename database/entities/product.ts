@@ -2,12 +2,14 @@ import { declareType, snakeToCamelCaseConversion, TypedData, Types, withTypeOpti
 import { DbDriver } from '../db-driver';
 import { Subscription } from './subscription';
 
+export type ProductId = string & { __brand: 'product_id' };
+
 export enum Store {
     Store77 = 'Store77',
 }
 
 export interface IProduct {
-    id: string;
+    id: ProductId;
     created: Date;
     name: string;
     url: string;
@@ -19,7 +21,7 @@ export class Product extends TypedData {
     public static TABLE_NAME = 'products';
 
     @declareType(Types.UTF8)
-    public id: string;
+    public id: ProductId;
 
     @declareType(Types.DATETIME)
     public created: Date;

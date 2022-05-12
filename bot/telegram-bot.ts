@@ -3,13 +3,14 @@ import { Update } from 'telegraf/typings/core/types/typegram';
 import { ExtraReplyMessage } from 'telegraf/typings/telegram-types';
 import { driver } from '../database/db-driver';
 import { ChatState } from '../database/entities/chat-state';
+import { ChatId } from '../database/entities/subscription';
 import { logger } from '../utils/logger';
 import { actions, commands } from './handlers';
 import { textHandler } from './handlers/text-handler';
 import { triggerHandler } from './handlers/trigger-handler';
 
 export interface MyContext extends Context {
-    chatId: number;
+    chatId: ChatId;
     chatState: ChatState | null;
 }
 
@@ -73,8 +74,8 @@ export class TelegramBot {
                 return;
             }
 
-            ctx.chatState = await ChatState.getChatState(driver, { chatId });
-            ctx.chatId = chatId;
+            ctx.chatId = chatId as ChatId;
+            ctx.chatState = await ChatState.getChatState(driver, { chatId: ctx.chatId });
 
             return next();
         });

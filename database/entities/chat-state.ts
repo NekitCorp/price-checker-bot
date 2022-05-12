@@ -1,13 +1,14 @@
 import { declareType, snakeToCamelCaseConversion, TypedData, Types, withTypeOptions } from 'ydb-sdk';
 import { DbDriver } from '../db-driver';
 import { Store } from './product';
+import { ChatId } from './subscription';
 
 export enum State {
     AddProduct = 'add-product',
 }
 
 export interface IChatState {
-    chatId: number;
+    chatId: ChatId;
     state: State;
     store: Store;
     created: Date;
@@ -18,7 +19,7 @@ export class ChatState extends TypedData {
     public static TABLE_NAME = 'chat_states';
 
     @declareType(Types.UINT64)
-    public chatId: number;
+    public chatId: ChatId;
 
     @declareType(Types.UTF8)
     public state: State;

@@ -1,4 +1,5 @@
 import { driver } from '../../../database/db-driver';
+import { ProductId } from '../../../database/entities/product';
 import { Subscription } from '../../../database/entities/subscription';
 import { replySubscribesList } from '../helpers';
 import { Action, ActionContext } from '../types';

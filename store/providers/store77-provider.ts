@@ -2,7 +2,7 @@ import axios from 'axios';
 import https from 'https';
 import { HTMLElement, parse } from 'node-html-parser';
 import { Price } from '../../database/entities/price';
-import { Product, Store } from '../../database/entities/product';
+import { Product, ProductId, Store } from '../../database/entities/product';
 import { logger } from '../../utils/logger';
 import { IStoreProvider } from '../provider';
 
@@ -28,7 +28,7 @@ export class Store77Provider implements IStoreProvider {
             throw new Error('Не удалось разобрать страницу.');
         }
 
-        const id = dom.querySelector('[data-type="addBasket"]')?.getAttribute('data-id');
+        const id = dom.querySelector('[data-type="addBasket"]')?.getAttribute('data-id') as ProductId | undefined;
         if (!id) {
             throw new Error('Не удалось найти название код товара.');
         }

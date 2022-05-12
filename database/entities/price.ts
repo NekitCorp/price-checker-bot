@@ -1,9 +1,10 @@
 import { declareType, snakeToCamelCaseConversion, TypedData, Types, withTypeOptions } from 'ydb-sdk';
 import { DbDriver } from '../db-driver';
 import { DateFilter } from './filters';
+import { ProductId } from './product';
 
 interface IPrice {
-    productId: string;
+    productId: ProductId;
     created: Date;
     price: number;
 }
@@ -13,7 +14,7 @@ export class Price extends TypedData {
     public static TABLE_NAME = 'prices';
 
     @declareType(Types.UTF8)
-    public productId: string;
+    public productId: ProductId;
 
     @declareType(Types.DATETIME)
     public created: Date;
