@@ -10,22 +10,24 @@ import { numberWithSpaces } from '../../utils/number';
 import { escapeMessage } from '../../utils/telegram';
 import { TelegramBot } from '../telegram-bot';
 
+const SCOPE = 'TRIGGER_HANDLER';
+
 export async function triggerHandler(bot: TelegramBot) {
     await updatePrices();
 
     const subscriptions = await getSubscriptions();
     const availableProducts = await getAvailableProducts();
 
-    logger.log(`Available products: ${Object.keys(availableProducts).join(',')}.`);
+    logger.log(`Available products: ${Object.keys(availableProducts).join(',')}.`, { scope: SCOPE });
 
     const messages = prepareMessages(subscriptions, availableProducts);
 
-    logger.log(`Messages to send: ${messages.map((m) => m.chatId).join(',')}.`);
+    logger.log(`Messages to send: ${messages.map((m) => m.chatId).join(',')}.`, { scope: SCOPE });
 
     await Promise.all(
         messages.map(async ({ chatId, message }) => {
             await bot.sendMessage(chatId, message, { parse_mode: 'MarkdownV2', disable_web_page_preview: true });
-            logger.log(`Message ${chatId} sent successfully!`);
+            logger.log(`Message ${chatId} sent successfully!`, { scope: SCOPE });
         }),
     );
 }
@@ -44,9 +46,11 @@ async function updatePrices() {
 
             await data.price.insert(driver);
 
-            logger.log(`New price ${numberWithSpaces(data.price.price)} added for product ${data.product.id}.`);
+            logger.log(`New price ${numberWithSpaces(data.price.price)} added for product ${data.product.id}.`, {
+                scope: SCOPE,
+            });
         } catch (error) {
-            logger.error(error, { scope: 'TRIGGER_UPDATE_PRICE_' + product.id });
+            logger.error(error, { scope: `ERROR_TRIGGER_UPDATE_PRICE_${product.id}` });
         }
     }
 }

@@ -6,7 +6,7 @@ import { ICloudContext, ICloudEvent, isTriggerEvent } from './utils/yandex-cloud
  * Handler for Yandex Cloud Function
  */
 module.exports.handler = async function (event: ICloudEvent, context: ICloudContext) {
-    logger.log('[CLOUD_EVENT]', event);
+    logger.log(event, { scope: 'CLOUD_EVENT' });
 
     const isTrigger = isTriggerEvent(event);
     const message = event.body && JSON.parse(event.body);

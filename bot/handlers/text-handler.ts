@@ -33,7 +33,7 @@ async function addProductHandler(ctx: CommandContext, chatState: ChatState) {
         product = data.product;
         price = data.price;
     } catch (error) {
-        logger.error(error, { context: ctx });
+        logger.error(error, { context: ctx, scope: 'ERROR_ADD_PRODUCT_HANDLER' });
         return ctx.reply(`😭 Ошибка. ${error}`);
     }
 

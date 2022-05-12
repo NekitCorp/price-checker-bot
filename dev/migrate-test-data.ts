@@ -7,13 +7,12 @@ import { ChatState } from '../database/entities/chat-state';
 import { Price } from '../database/entities/price';
 import { Product, ProductId, Store } from '../database/entities/product';
 import { ChatId, Subscription } from '../database/entities/subscription';
-import { logger } from '../utils/logger';
 
 const TABLES = [Product.TABLE_NAME, Price.TABLE_NAME, Subscription.TABLE_NAME, ChatState.TABLE_NAME];
 
 async function clear(session: Session) {
     for await (const table of TABLES) {
-        logger.log(`Deleting data from a table ${table}...`);
+        console.log(`Deleting data from a table ${table}...`);
         const query = `DELETE FROM ${table};`;
         await session.executeQuery(query);
     }
@@ -23,7 +22,7 @@ const pid = (id: string): ProductId => id as ProductId;
 const cid = (id: number): ChatId => id as ChatId;
 
 async function migrate() {
-    logger.log('Creating products...');
+    console.log('Creating products...');
     await Product.create({
         id: pid('531733'),
         name: 'Ноутбук Apple MacBook Air (M1 8C CPU/7C GPU, 16Гб, 256Гб SSD) Золотой Z12A0008QRU/A',
@@ -43,7 +42,7 @@ async function migrate() {
         store: Store.Store77,
     }).insert(driver);
 
-    logger.log('Creating prices...');
+    console.log('Creating prices...');
     const today = dayjs().hour(10).minute(0);
     // 8-531733
     await new Price({ productId: pid('531733'), price: 130980, created: today.toDate() }).insert(driver);
@@ -56,7 +55,7 @@ async function migrate() {
     // 700880
     await new Price({ productId: pid('700880'), price: 30740, created: today.toDate() }).insert(driver);
 
-    logger.log('Creating subscriptions...');
+    console.log('Creating subscriptions...');
     await Subscription.create({ productId: pid('668506'), chatId: cid(276071981) }).insert(driver);
     await Subscription.create({ productId: pid('531733'), chatId: cid(276071981) }).insert(driver);
 }
@@ -65,7 +64,7 @@ driver.withSession(async (session) => {
     await clear(session);
     await migrate();
 
-    logger.log('Successful data migration');
+    console.log('Successful data migration');
 
     process.exit();
 });

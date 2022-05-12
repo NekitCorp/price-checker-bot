@@ -4,15 +4,14 @@ import { isYandexCloudFunction } from './yandex-cloud';
 class LoggerService {
     constructor(private adminChatId: string) {}
 
-    public error(error: unknown, options?: { context?: MyContext; scope?: string }) {
+    public error(error: unknown, options: { context?: MyContext; scope: string }) {
         const update = options?.context?.update;
-        const scope = options?.scope ?? 'ERROR';
 
         const errorObj =
             error instanceof Error
                 ? { message: error.message, stack: error.stack, update }
                 : { message: `${error}`, update };
-        const message = `[${scope}] ${JSON.stringify(errorObj)}`;
+        const message = `[${options.scope}] ${JSON.stringify(errorObj)}`;
 
         console.error(message);
 
@@ -21,12 +20,12 @@ class LoggerService {
             .catch((err) => console.error(`[ERROR] Failed to send error message`, err?.message));
     }
 
-    public log(...messages: unknown[]) {
+    public log(message: unknown, options: { scope: string }) {
         try {
-            const data = isYandexCloudFunction ? messages.map((mes) => JSON.stringify(mes)) : messages;
-            console.log(...data);
+            const data = isYandexCloudFunction ? JSON.stringify(message) : message;
+            console.log(`[${options.scope}] ${data}`);
         } catch (error) {
-            this.error(error, { scope: 'LOG_ERROR' });
+            this.error(error, { scope: `LOG_ERROR_${options.scope}` });
         }
     }
 
@@ -36,14 +35,6 @@ class LoggerService {
 
     public timeEnd(label?: string) {
         console.timeEnd(label);
-    }
-
-    private prepareMessage(message: unknown) {
-        return isYandexCloudFunction ? JSON.stringify(message) : message;
-    }
-
-    private prepareOptionalParams(optionalParams: unknown[]) {
-        return isYandexCloudFunction ? optionalParams.map((p) => JSON.stringify(p)) : optionalParams;
     }
 }
 

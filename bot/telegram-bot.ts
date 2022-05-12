@@ -24,13 +24,15 @@ export class TelegramBot {
     }
 
     public launch() {
-        this.bot.launch().then(() => logger.log(`Telegram bot ${this.bot.botInfo?.first_name} is running.`));
+        this.bot
+            .launch()
+            .then(() => logger.log(`Telegram bot ${this.bot.botInfo?.first_name} is running.`, { scope: 'BOT' }));
     }
 
     public stop(reason?: string) {
-        logger.log(`Telegram bot ${this.bot.botInfo?.first_name} stops...`);
+        logger.log(`Telegram bot ${this.bot.botInfo?.first_name} stops...`, { scope: 'BOT' });
         this.bot.stop(reason);
-        logger.log(`Telegram bot ${this.bot.botInfo?.first_name} stopped.`);
+        logger.log(`Telegram bot ${this.bot.botInfo?.first_name} stopped.`, { scope: 'BOT' });
     }
 
     public async sendMessage(chatId: string | number, text: string, extra?: ExtraReplyMessage) {
@@ -38,10 +40,12 @@ export class TelegramBot {
             return await this.bot.telegram.sendMessage(chatId, text, extra);
         } catch (err) {
             if (err instanceof TelegramError && err.code === 403) {
-                return logger.log(`Failed to send a message to user ${chatId} because the bot was blocked.`);
+                return logger.log(`Failed to send a message to user ${chatId} because the bot was blocked.`, {
+                    scope: 'BOT_SEND_MESSAGE',
+                });
             }
 
-            logger.error(`Failed to send message to user ${chatId}. ${err}.`);
+            logger.error(`Failed to send message to user ${chatId}. ${err}.`, { scope: 'ERROR_BOT_SEND_MESSAGE' });
         }
     }
 
@@ -50,7 +54,7 @@ export class TelegramBot {
     }
 
     public trigger() {
-        logger.log('[BOT_HANDLER] Trigger handler processing...');
+        logger.log('Trigger handler processing...', { scope: 'BOT_HANDLER' });
         try {
             return triggerHandler(this);
         } catch (error) {
@@ -60,7 +64,7 @@ export class TelegramBot {
 
     private registerMiddlewares() {
         this.bot.use(async (ctx, next) => {
-            logger.log('[TELEGRAM_UPDATE]', ctx.update);
+            logger.log(ctx.update, { scope: 'TELEGRAM_UPDATE' });
             logger.time(`Processing update ${ctx.update.update_id}`);
             await next();
             logger.timeEnd(`Processing update ${ctx.update.update_id}`);
@@ -85,11 +89,11 @@ export class TelegramBot {
         // register commands
         Object.entries(commands).forEach(([command, handler]) => {
             return this.bot.command(command, (ctx) => {
-                logger.log(`[BOT_HANDLER] Start command ${command} processing...`);
+                logger.log(`Start command ${command} processing...`, { scope: 'BOT_HANDLER' });
                 try {
                     return handler(ctx);
                 } catch (error) {
-                    logger.error(error, { context: ctx });
+                    logger.error(error, { context: ctx, scope: 'ERROR_BOT_HANDLER' });
                     ctx.reply('😿 Похоже что-то пошло не так...');
                 }
             });
@@ -98,11 +102,11 @@ export class TelegramBot {
         // register actions
         Object.entries(actions).forEach(([action, { trigger, handler }]) => {
             return this.bot.action(trigger, (ctx) => {
-                logger.log(`[BOT_HANDLER] Start action ${action} processing...`);
+                logger.log(`Start action ${action} processing...`, { scope: 'BOT_HANDLER' });
                 try {
                     return handler(ctx);
                 } catch (error) {
-                    logger.error(error, { context: ctx });
+                    logger.error(error, { context: ctx, scope: 'ERROR_BOT_HANDLER' });
                     ctx.reply('😿 Похоже что-то пошло не так...');
                 }
             });
@@ -110,11 +114,11 @@ export class TelegramBot {
 
         // register text
         this.bot.on('text', (ctx) => {
-            logger.log(`[BOT_HANDLER] Start text handler processing...`);
+            logger.log(`Start text handler processing...`, { scope: 'BOT_HANDLER' });
             try {
                 return textHandler(ctx);
             } catch (error) {
-                logger.error(error, { context: ctx });
+                logger.error(error, { context: ctx, scope: 'ERROR_BOT_HANDLER' });
                 ctx.reply('😿 Похоже что-то пошло не так...');
             }
         });

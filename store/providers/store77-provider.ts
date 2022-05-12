@@ -16,7 +16,7 @@ export class Store77Provider implements IStoreProvider {
             const response = await axios.get<string>(url, { httpsAgent });
             html = response.data;
         } catch (error) {
-            logger.error(error);
+            logger.error(error, { scope: 'ERROR_STORE77_GET_PAGE' });
             throw new Error('Не удалось получить страницу.');
         }
 
@@ -24,7 +24,7 @@ export class Store77Provider implements IStoreProvider {
         try {
             dom = parse(html);
         } catch (error) {
-            logger.error(error);
+            logger.error(error, { scope: 'ERROR_STORE77_PARSE_PAGE' });
             throw new Error('Не удалось разобрать страницу.');
         }
 
