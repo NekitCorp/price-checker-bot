@@ -1,4 +1,4 @@
-import { Context, Telegraf } from 'telegraf';
+import { Context, Telegraf, TelegramError } from 'telegraf';
 import { Update } from 'telegraf/typings/core/types/typegram';
 import { ExtraReplyMessage } from 'telegraf/typings/telegram-types';
 import { driver } from '../database/db-driver';
@@ -14,7 +14,7 @@ export interface MyContext extends Context {
 }
 
 export class TelegramBot {
-    private readonly bot: Telegraf<MyContext>;
+    public readonly bot: Telegraf<MyContext>;
 
     constructor(token: string) {
         this.bot = new Telegraf<MyContext>(token);
@@ -32,8 +32,16 @@ export class TelegramBot {
         logger.log(`Telegram bot ${this.bot.botInfo?.first_name} stopped.`);
     }
 
-    public sendMessage(chatId: string | number, text: string, extra?: ExtraReplyMessage) {
-        return this.bot.telegram.sendMessage(chatId, text, extra);
+    public async sendMessage(chatId: string | number, text: string, extra?: ExtraReplyMessage) {
+        try {
+            return await this.bot.telegram.sendMessage(chatId, text, extra);
+        } catch (err) {
+            if (err instanceof TelegramError && err.code === 403) {
+                return logger.log(`Failed to send a message to user ${chatId} because the bot was blocked.`);
+            }
+
+            logger.error(`Failed to send message to user ${chatId}. ${err}.`);
+        }
     }
 
     public update(update: Update) {

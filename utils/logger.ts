@@ -16,9 +16,9 @@ class LoggerService {
 
         console.error(message);
 
-        telegramBot
+        telegramBot.bot.telegram
             .sendMessage(this.adminChatId, message)
-            .catch((err) => console.error(`[ERROR] Failed to send error message`, err));
+            .catch((err) => console.error(`[ERROR] Failed to send error message`, err?.message));
     }
 
     public log(...messages: unknown[]) {
