@@ -6,6 +6,7 @@ export type ProductId = string & { __brand: 'product_id' };
 
 export enum Store {
     Store77 = 'Store77',
+    Bigstv = 'Bigstv',
 }
 
 export interface IProduct {
@@ -75,7 +76,7 @@ export class Product extends TypedData {
     public static async getProductsWithSubscription(driver: DbDriver): Promise<Product[]> {
         return await driver.withSession(async (session) => {
             const query = `
-                SELECT ${Product.TABLE_NAME}.*
+                SELECT DISTINCT ${Product.TABLE_NAME}.*
                 FROM ${Product.TABLE_NAME}
                 INNER JOIN ${Subscription.TABLE_NAME} ON ${Subscription.TABLE_NAME}.product_id = ${Product.TABLE_NAME}.id
             `;

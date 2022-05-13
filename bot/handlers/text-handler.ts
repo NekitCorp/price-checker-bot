@@ -5,7 +5,6 @@ import { Product } from '../../database/entities/product';
 import { Subscription } from '../../database/entities/subscription';
 import { getStoreProvider } from '../../store/provider';
 import { logger } from '../../utils/logger';
-import { getStoreExampleLink, getStoreLinkRegExp } from '../../utils/store';
 import { Command, CommandContext } from './types';
 
 export async function textHandler(ctx: CommandContext) {
@@ -18,9 +17,11 @@ export async function textHandler(ctx: CommandContext) {
 }
 
 async function addProductHandler(ctx: CommandContext, chatState: ChatState) {
+    const storeProvider = getStoreProvider(chatState.store);
+
     // Проверка ссылки
-    if (!getStoreLinkRegExp(chatState.store).test(ctx.message.text)) {
-        const message = `❌ Неверная ссылка.\n\n💡 Пример ссылки: ${getStoreExampleLink(chatState.store)}`;
+    if (!storeProvider.checkLink(ctx.message.text)) {
+        const message = `❌ Неверная ссылка.\n\n💡 Пример ссылки: ${storeProvider.exampleLink}`;
         return ctx.reply(message, { disable_web_page_preview: true });
     }
 
@@ -28,7 +29,6 @@ async function addProductHandler(ctx: CommandContext, chatState: ChatState) {
     let product: Product;
     let price: Price;
     try {
-        const storeProvider = getStoreProvider(chatState.store);
         const data = await storeProvider.getData(ctx.message.text);
         product = data.product;
         price = data.price;

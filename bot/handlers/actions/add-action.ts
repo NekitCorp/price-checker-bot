@@ -1,7 +1,7 @@
 import { driver } from '../../../database/db-driver';
 import { ChatState, State } from '../../../database/entities/chat-state';
 import { Store } from '../../../database/entities/product';
-import { getStoreExampleLink } from '../../../utils/store';
+import { getStoreProvider } from '../../../store/provider';
 import { Action, ActionContext } from '../types';
 
 export async function addActionHandler(ctx: ActionContext) {
@@ -21,6 +21,7 @@ export async function addActionHandler(ctx: ActionContext) {
 
     ctx.deleteMessage();
 
-    const message = `⌛ Пришлите мне ссылку с товаром.\n\n💡 Пример ссылки: ${getStoreExampleLink(store)}`;
+    const storeProvider = getStoreProvider(store);
+    const message = `⌛ Пришлите мне ссылку с товаром.\n\n💡 Пример ссылки: ${storeProvider.exampleLink}`;
     ctx.reply(message, { disable_web_page_preview: true });
 }

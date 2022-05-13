@@ -89,7 +89,7 @@ export class TelegramBot {
         // register commands
         Object.entries(commands).forEach(([command, handler]) => {
             return this.bot.command(command, (ctx) => {
-                logger.log(`Start command ${command} processing...`, { scope: 'BOT_HANDLER' });
+                logger.log(`Start command /${command} processing...`, { scope: 'BOT_HANDLER' });
                 try {
                     return handler(ctx);
                 } catch (error) {

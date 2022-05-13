@@ -86,3 +86,8 @@ npm run trigger
 2. Переходим по ссылке `https://api.telegram.org/bot{my_bot_token}/setWebhook?url={url_to_send_updates_to}` для установки webhook'а, где:
     - `my_bot_token`: токен, который был получен от `BotFather` при создании бота
     - `url_to_send_updates_to`: ссылка для вызова функции `price-checker-bot-function`
+
+## TODO:
+
+-   [ ] ESLint (console error)
+-   [ ] Price graphics

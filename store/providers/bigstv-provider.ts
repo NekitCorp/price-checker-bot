@@ -5,25 +5,23 @@ import { Price } from '../../database/entities/price';
 import { Product, ProductId, Store } from '../../database/entities/product';
 import { logger } from '../../utils/logger';
 import { IStoreProvider } from '../provider';
+import iconv from 'iconv-lite';
 
-// https://stackoverflow.com/questions/51363855/how-to-configure-axios-to-use-ssl-certificate
-const httpsAgent = new https.Agent({ rejectUnauthorized: false });
-
-export class Store77Provider implements IStoreProvider {
-    public exampleLink =
-        'https://store77.net/apple_iphone_13_pro_max/telefon_apple_iphone_13_pro_max_128gb_alpine_green_mncp3ll_a/';
+export class BigstvProvider implements IStoreProvider {
+    public exampleLink = 'https://www.bigstv.ru/product/televizor-oled-sony-xr-65a80j/';
 
     public checkLink(link: string) {
-        return /^https:\/\/store77\.net\/[a-z_0-9]+\/[a-z_0-9]+\/$/.test(link);
+        return /^https:\/\/www\.bigstv\.ru\/product\/[a-z_\-0-9]+\/$/.test(link);
     }
 
     public async getData(url: string): Promise<{ product: Product; price: Price }> {
         let html: string;
         try {
-            const response = await axios.get<string>(url, { httpsAgent });
-            html = response.data;
+            // https://github.com/axios/axios/issues/332
+            const response = await axios.get<Buffer>(url, { responseType: 'arraybuffer' });
+            html = iconv.decode(response.data, 'win1251');
         } catch (error) {
-            logger.error(error, { scope: 'ERROR_STORE77_GET_PAGE' });
+            logger.error(error, { scope: 'ERROR_BIGSTV_GET_PAGE' });
             throw new Error('Не удалось получить страницу.');
         }
 
@@ -31,27 +29,27 @@ export class Store77Provider implements IStoreProvider {
         try {
             dom = parse(html);
         } catch (error) {
-            logger.error(error, { scope: 'ERROR_STORE77_PARSE_PAGE' });
+            logger.error(error, { scope: 'ERROR_BIGSTV_PARSE_PAGE' });
             throw new Error('Не удалось разобрать страницу.');
         }
 
-        const id = dom.querySelector('[data-type="addBasket"]')?.getAttribute('data-id') as ProductId | undefined;
+        const id = dom.querySelector('input[name="item_id"]')?.getAttribute('value') as ProductId | undefined;
         if (!id) {
             throw new Error('Не удалось найти код товара.');
         }
 
-        const name = dom.querySelector('h1.title_card_product')?.innerText;
+        const name = dom.querySelector('.page-title')?.innerText.replace(/[\n\t]/g, '');
         if (!name) {
             throw new Error('Не удалось найти название товара.');
         }
 
-        const price = parseInt(dom.querySelector('.price_title_product')?.innerText.replace(/[^0-9]/g, '') ?? '');
+        const price = parseInt(dom.getElementById(`tovar_form_price${id}`)?.innerText.replace(/[^0-9]/g, '') ?? '');
         if (!price) {
             throw new Error('Не удалось найти цену товара.');
         }
 
         return {
-            product: Product.create({ id, name, store: Store.Store77, url }),
+            product: Product.create({ id, name, store: Store.Bigstv, url }),
             price: Price.create({ productId: id, price }),
         };
     }
