@@ -13,8 +13,8 @@ export async function addActionHandler(ctx: ActionContext) {
     const store = data.replace(`${Action.Add} `, '') as Store;
 
     if (ctx.chatState) {
-        ctx.reply(`❌ Ошибка. Неверное состояние чата: ${ctx.chatState.state}.`);
-        return;
+        // Удаляем состояние текущего чата
+        await ctx.chatState.remove(driver);
     }
 
     await ChatState.create({ state: State.AddProduct, store, chatId: ctx.chatId }).insert(driver);
