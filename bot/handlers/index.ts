@@ -1,4 +1,5 @@
 import { addActionHandler } from './actions/add-action';
+import { chartActionHandler } from './actions/chart-action';
 import { listActionHandler } from './actions/list-action';
 import { removeActionHandler } from './actions/remove-action';
 import { subscriptionDetailActionHandler } from './actions/subscription-detail-action';
@@ -31,5 +32,9 @@ export const actions: Record<Action, { trigger: Triggers; handler: (ctx: ActionC
     [Action.Add]: {
         trigger: new RegExp(`^${Action.Add}\\s{1}[a-zA-Z0-9]+$`),
         handler: addActionHandler,
+    },
+    [Action.Chart]: {
+        trigger: new RegExp(`^${Action.Chart}\\s{1}[a-zA-Z0-9]+$`),
+        handler: chartActionHandler,
     },
 };

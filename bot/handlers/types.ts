@@ -15,6 +15,7 @@ export enum Action {
     List = 'list',
     Remove = 'remove',
     Add = 'add',
+    Chart = 'chart',
 }
 
 /** Takes: a context type and an update type (or message subtype).

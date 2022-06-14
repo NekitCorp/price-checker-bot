@@ -101,4 +101,22 @@ export class Price extends TypedData {
             return Price.createNativeObjects(resultSets[0]) as Price[];
         });
     }
+
+    /** Получить последние `count` цен продукта */
+    public static async getLastPrices(
+        driver: DbDriver,
+        data: { count: number; productId: ProductId },
+    ): Promise<Price[]> {
+        return await driver.withSession(async (session) => {
+            const query = `
+                SELECT *
+                FROM ${Price.TABLE_NAME}
+                WHERE product_id = "${data.productId}"
+                ORDER BY created DESC
+                LIMIT ${data.count}
+            `;
+            const { resultSets } = await session.executeQuery(query);
+            return Price.createNativeObjects(resultSets[0]) as Price[];
+        });
+    }
 }

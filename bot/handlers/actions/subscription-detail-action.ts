@@ -32,6 +32,7 @@ export async function subscriptionDetailActionHandler(ctx: ActionContext) {
             inline_keyboard: [
                 [
                     { text: '🔙 Назад', callback_data: Action.List },
+                    { text: '📈 График цены', callback_data: `${Action.Chart} ${subscription.productId}` },
                     { text: '🗑 Удалить', callback_data: `${Action.Remove} ${subscription.productId}` },
                 ],
             ],

@@ -90,4 +90,3 @@ npm run trigger
 ## TODO:
 
 -   [ ] ESLint (console error)
--   [ ] Price graphics

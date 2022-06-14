@@ -7,6 +7,7 @@ import { ChatState } from '../database/entities/chat-state';
 import { Price } from '../database/entities/price';
 import { Product, ProductId, Store } from '../database/entities/product';
 import { ChatId, Subscription } from '../database/entities/subscription';
+import { randomNumber } from '../utils/number';
 
 const TABLES = [Product.TABLE_NAME, Price.TABLE_NAME, Subscription.TABLE_NAME, ChatState.TABLE_NAME];
 
@@ -45,9 +46,13 @@ async function migrate() {
     console.log('Creating prices...');
     const today = dayjs().hour(10).minute(0);
     // 8-531733
-    await new Price({ productId: pid('531733'), price: 130980, created: today.toDate() }).insert(driver);
-    await new Price({ productId: pid('531733'), price: 128980, created: today.add(-1, 'd').toDate() }).insert(driver);
-    await new Price({ productId: pid('531733'), price: 130980, created: today.add(-2, 'd').toDate() }).insert(driver);
+    for (let index = 0; index < 30; index++) {
+        await new Price({
+            productId: pid('531733'),
+            price: randomNumber(120000, 140000),
+            created: today.add(-1 * index, 'd').toDate(),
+        }).insert(driver);
+    }
     // 668506
     await new Price({ productId: pid('668506'), price: 105980, created: today.toDate() }).insert(driver);
     await new Price({ productId: pid('668506'), price: 105980, created: today.add(-1, 'd').toDate() }).insert(driver);
