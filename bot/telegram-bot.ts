@@ -18,7 +18,7 @@ export class TelegramBot {
     public readonly bot: Telegraf<MyContext>;
 
     constructor(token: string) {
-        this.bot = new Telegraf<MyContext>(token);
+        this.bot = new Telegraf<MyContext>(token, { handlerTimeout: 5 * 1000 });
         this.registerMiddlewares();
         this.registerHandlers();
     }
