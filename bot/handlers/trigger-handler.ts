@@ -26,8 +26,12 @@ export async function triggerHandler(bot: TelegramBot) {
 
     await Promise.all(
         messages.map(async ({ chatId, message }) => {
-            await bot.sendMessage(chatId, message, { parse_mode: 'MarkdownV2', disable_web_page_preview: true });
-            logger.log(`Message ${chatId} sent successfully!`, { scope: SCOPE });
+            try {
+                await bot.sendMessage(chatId, message, { parse_mode: 'MarkdownV2', disable_web_page_preview: true });
+                logger.log(`Message ${chatId} sent successfully!`, { scope: SCOPE });
+            } catch (error) {
+                logger.error(error, { scope: `${SCOPE}_ERROR_FAILED_SEND_MESSAGE` });
+            }
         }),
     );
 }
