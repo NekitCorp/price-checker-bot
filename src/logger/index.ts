@@ -1,6 +1,5 @@
 /* eslint-disable no-console */
 import { Telegraf } from 'telegraf';
-import { isYandexCloudFunction } from '../utils/yandex-cloud';
 import { ILoggerErrorOptions, ILoggerLogOptions, ILoggerService } from './types';
 
 export class LoggerService implements ILoggerService {
@@ -28,8 +27,7 @@ export class LoggerService implements ILoggerService {
 
     log(message: unknown, options: ILoggerLogOptions) {
         try {
-            const data = isYandexCloudFunction ? JSON.stringify(message) : message;
-            console.log(`[${options.scope}] ${data}`);
+            console.log(`[${options.scope}] ${JSON.stringify(message)}`);
         } catch (error) {
             this.error(error, { scope: `LOG_ERROR_${options.scope}` });
         }

@@ -6,6 +6,7 @@ const TEST_STORES: Record<Store, string[]> = {
     [Store.Store77]: [
         'https://store77.net/apple_iphone_13_pro_max/telefon_apple_iphone_13_pro_max_128gb_alpine_green_mncp3ll_a/',
         'https://store77.net/chasy_apple_watch_series_7/chasy_apple_watch_series_7_gps_41mm_aluminum_case_with_sport_band_belyy_siyayushchaya_zvezda_mkmx3/',
+        'https://store77.net/apple_macbook_air/noutbuk_apple_macbook_air_m1_16gb_256gb_ssd_zolotoy_z12a0008qru_a/',
     ],
     [Store.Bigstv]: [
         'https://www.bigstv.ru/product/televizor-oled-sony-xr-65a80j/',

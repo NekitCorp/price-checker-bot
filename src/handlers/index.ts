@@ -7,6 +7,7 @@ import {
     subscriptionDetailActionHandler,
 } from './action';
 import { addCommandHandler, helpCommandHandler, listCommandHandler, startCommandHandler } from './command';
+import { textHandler } from './text/text-handler';
 import { triggerHandler } from './trigger/trigger-handler';
 import { Action, Command } from './types';
 
@@ -40,6 +41,6 @@ export const actions: Record<Action, { trigger: Triggers; handler: ActionHandler
     },
 };
 
-export const textHandlers: TextHandler[] = [];
+export const textHandlers: TextHandler[] = [textHandler];
 
 export { triggerHandler };

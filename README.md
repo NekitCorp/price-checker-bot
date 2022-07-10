@@ -19,7 +19,7 @@ docker run -d --rm --name ydb-local -h localhost \
 2. Выполнить скрипт миграции `database/migrate.sql` в [YDB UI](http://localhost:8765/) или с помощью `ydb-cli`:
 
 ```sh
-ydb -e grpc://localhost:2136 -d /local yql -f ./database/migrate.sql
+ydb -e grpc://localhost:2136 -d /local yql -f ./src/database/migrate.sql
 ```
 
 3. Создать `.env.local` в корне проекта с заполненными переменными окружения из `.env`

@@ -11,6 +11,8 @@ const backgroundColour = 'white'; // Uses https://www.w3schools.com/tags/canvas_
 const chartJSNodeCanvas = new ChartJSNodeCanvas({ width, height, backgroundColour });
 
 export const chartActionHandler: ActionHandler = async ({ ctx, dbDriver }) => {
+    await ctx.answerCbQuery();
+
     const data = ctx.callbackQuery?.data;
     if (!data) {
         ctx.reply('❌ Ошибка. Не найдены данные callbackQuery.');
@@ -50,6 +52,5 @@ export const chartActionHandler: ActionHandler = async ({ ctx, dbDriver }) => {
         },
     });
 
-    await ctx.answerCbQuery();
     await ctx.replyWithPhoto({ source });
 };
