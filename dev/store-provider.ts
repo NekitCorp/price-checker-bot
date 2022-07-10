@@ -1,30 +1,35 @@
-require('dotenv-flow').config();
+import { getStoreProvider } from '../src/store';
+import { Store } from '../src/store/types';
 
-import { Store } from '../database/entities/product';
-import { getStoreProvider } from '../store/provider';
-
-const STORE: Store = Store.Bigstv;
-const PRODUCT_URLS: string[] = [
-    'https://www.bigstv.ru/product/televizor-oled-sony-xr-65a80j/',
-    'https://www.bigstv.ru/product/mitsubishi-electric-msz-hj25va-vnutrennij-blok/',
-    'https://www.bigstv.ru/product/antennyj-kabel/',
-];
+const TEST_STORES: Record<Store, string[]> = {
+    [Store.Store77]: [
+        'https://store77.net/apple_iphone_13_pro_max/telefon_apple_iphone_13_pro_max_128gb_alpine_green_mncp3ll_a/',
+        'https://store77.net/chasy_apple_watch_series_7/chasy_apple_watch_series_7_gps_41mm_aluminum_case_with_sport_band_belyy_siyayushchaya_zvezda_mkmx3/',
+    ],
+    [Store.Bigstv]: [
+        'https://www.bigstv.ru/product/televizor-oled-sony-xr-65a80j/',
+        'https://www.bigstv.ru/product/mitsubishi-electric-msz-hj25va-vnutrennij-blok/',
+        'https://www.bigstv.ru/product/antennyj-kabel/',
+    ],
+};
 
 async function main() {
-    const storeProvider = getStoreProvider(STORE);
+    for (const store in TEST_STORES) {
+        const storeProvider = getStoreProvider(store as Store, console);
 
-    for (const url of PRODUCT_URLS) {
-        console.log(`Start check ${url}...`);
+        for (const url of TEST_STORES[store as Store]) {
+            console.log(`[${store}] Start check ${url}...`);
 
-        if (!storeProvider.checkLink(url)) {
-            return console.log(`Wrong link, example: ${storeProvider.exampleLink}`);
-        }
+            if (!storeProvider.checkLink(url)) {
+                return console.log(`Wrong link, example: ${storeProvider.exampleLink}`);
+            }
 
-        try {
-            const data = await storeProvider.getData(url);
-            console.log(data);
-        } catch (error) {
-            console.log('[ERROR]', error);
+            try {
+                const data = await storeProvider.getData(url);
+                console.log(data);
+            } catch (error) {
+                console.log('[ERROR]', error);
+            }
         }
     }
 
