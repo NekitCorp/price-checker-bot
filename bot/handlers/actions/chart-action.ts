@@ -50,5 +50,6 @@ export async function chartActionHandler(ctx: ActionContext) {
         },
     });
 
-    ctx.replyWithPhoto({ source });
+    await ctx.answerCbQuery();
+    await ctx.replyWithPhoto({ source });
 }
