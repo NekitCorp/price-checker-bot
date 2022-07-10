@@ -1,4 +1,6 @@
+/* eslint-disable no-console */
 import dayjs from 'dayjs';
+import 'dotenv-flow/config';
 import { Session } from 'ydb-sdk';
 import { DbDriver } from '../src/database';
 import { ChatState } from '../src/database/entities/chat-state';
@@ -7,8 +9,6 @@ import { Product, ProductId } from '../src/database/entities/product';
 import { ChatId, Subscription } from '../src/database/entities/subscription';
 import { Store } from '../src/store/types';
 import { randomNumber } from '../src/utils/number';
-
-require('dotenv-flow').config();
 
 if (!process.env.YDB_ENDPOINT) {
     throw new Error('Environment variable `YDB_ENDPOINT` not provided');

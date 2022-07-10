@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { Telegraf } from 'telegraf';
 import { isYandexCloudFunction } from '../utils/yandex-cloud';
 import { ILoggerErrorOptions, ILoggerLogOptions, ILoggerService } from './types';

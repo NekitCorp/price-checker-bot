@@ -1,8 +1,7 @@
+import 'dotenv-flow/config';
 import { DbDriver } from '../src/database';
 import { LoggerService } from '../src/logger';
 import { TelegramBot } from '../src/telegram-bot';
-
-require('dotenv-flow').config();
 
 if (!process.env.BOT_TOKEN) {
     throw new Error('Environment variable `BOT_TOKEN` not provided');

@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { getStoreProvider } from '../src/store';
 import { Store } from '../src/store/types';
 
