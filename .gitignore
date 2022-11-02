@@ -34,3 +34,6 @@ build/
 # Yandex Database local development
 ydb_certs
 ydb_data
+
+# Dev data
+chart.png

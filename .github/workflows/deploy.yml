@@ -10,7 +10,7 @@ jobs:
         runs-on: ubuntu-latest
         strategy:
             matrix:
-                node-version: [14.x]
+                node-version: [16.x]
         steps:
             - uses: actions/checkout@v2
             - uses: actions/setup-node@v2
@@ -30,7 +30,7 @@ jobs:
               with:
                   token: ${{ secrets.OAUTH_TOKEN }}
                   function_id: ${{ secrets.CLOUD_FUNCTION_ID }}
-                  runtime: 'nodejs14'
+                  runtime: 'nodejs16'
                   entrypoint: 'index.handler'
                   environment: BOT_TOKEN=${{ secrets.BOT_TOKEN }},YDB_DATABASE=${{ secrets.YDB_DATABASE }},YDB_ENDPOINT=${{ secrets.YDB_ENDPOINT }},ADMIN_CHAT_ID=${{ secrets.ADMIN_CHAT_ID }}
                   memory: '128'

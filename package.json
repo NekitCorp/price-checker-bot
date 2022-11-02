@@ -2,25 +2,30 @@
     "name": "price-checker-bot",
     "private": true,
     "version": "1.0.0",
+    "engines": {
+        "npm": ">=8.0.0 <9.0.0",
+        "node": ">=16.0.0 <17.0.0"
+    },
     "scripts": {
-        "start-bot": "nodemon --signal SIGHUP --files dev/start-telegram-bot.ts",
-        "migrate-test-data": "ts-node --files dev/migrate-test-data.ts",
-        "trigger": "ts-node --files dev/trigger.ts",
-        "store-provider": "ts-node --files dev/store-provider.ts",
+        "dev:start-bot": "nodemon --signal SIGHUP --files dev/start-telegram-bot.ts",
+        "dev:migrate-test-data": "ts-node --files dev/migrate-test-data.ts",
+        "dev:trigger": "ts-node --files dev/trigger.ts",
+        "dev:store-provider": "ts-node --files dev/store-provider.ts",
+        "dev:chart": "ts-node --files dev/chart.ts",
         "build": "tsc",
         "check-tsc": "tsc --noEmit",
         "lint": "eslint ."
     },
     "dependencies": {
         "axios": "^0.27.2",
-        "chart.js": "^3.8.0",
-        "chartjs-node-canvas": "^4.1.6",
+        "chart.js": "3.9.1",
+        "chartjs-node-canvas": "4.1.6",
         "dayjs": "^1.11.2",
         "dotenv-flow": "^3.2.0",
         "iconv-lite": "^0.6.3",
         "node-html-parser": "^5.3.3",
         "telegraf": "^4.8.1",
-        "ydb-sdk": "3.0.0"
+        "ydb-sdk": "3.4.4"
     },
     "devDependencies": {
         "@types/node": "^17.0.31",
