@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
-import { getStoreProvider } from '../src/store';
-import { Store } from '../src/store/types';
+import { getStoreProvider } from '../src/modules/store';
+import { Store } from '../src/modules/store/types';
 
 const TEST_STORES: Record<Store, string[]> = {
     [Store.Store77]: [
@@ -20,7 +20,7 @@ async function main() {
         const storeProvider = getStoreProvider(store as Store, console);
 
         for (const url of TEST_STORES[store as Store]) {
-            console.log(`[${store}] Start check ${url}...`);
+            console.log(`[${store}] Start check ${url}`);
 
             if (!storeProvider.checkLink(url)) {
                 return console.log(`Wrong link, example: ${storeProvider.exampleLink}`);

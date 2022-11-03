@@ -19,26 +19,26 @@ docker run -d --rm --name ydb-local -h localhost \
 2. Выполнить скрипт миграции `database/migrate.sql` в [YDB UI](http://localhost:8765/) или с помощью `ydb-cli`:
 
 ```sh
-ydb -e grpc://localhost:2136 -d /local yql -f ./src/database/migrate.sql
+ydb -e grpc://localhost:2136 -d /local yql -f ./src/modules/database/migrate.sql
 ```
 
 3. Создать `.env.local` в корне проекта с заполненными переменными окружения из `.env`
 4. [`optional`] Мигрировать тестовые данные
 
 ```sh
-npm run migrate-test-data
+npm run dev:migrate-test-data
 ```
 
 5. Запустить телеграм-бота
 
 ```sh
-npm run start-bot
+npm run dev:start-bot
 ```
 
 6. [`optional`] Имитировать ежедневный триггер
 
 ```sh
-npm run trigger
+npm run dev:trigger
 ```
 
 ## Инициализация

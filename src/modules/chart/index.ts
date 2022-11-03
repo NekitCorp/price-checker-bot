@@ -1,15 +1,14 @@
 import { ChartJSNodeCanvas } from 'chartjs-node-canvas';
+import { IChart, IChartData } from './types';
 
-export type IChartData = { x: string; y: number }[];
-
-export class Chart {
+export class Chart implements IChart {
     private readonly canvas: ChartJSNodeCanvas;
 
     constructor(width = 1000, height = 400) {
         this.canvas = new ChartJSNodeCanvas({ width, height, backgroundColour: 'white' });
     }
 
-    public async render(data: IChartData): Promise<Buffer> {
+    public async render(data: IChartData) {
         return await this.canvas.renderToBuffer({
             type: 'line',
             data: {

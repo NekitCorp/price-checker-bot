@@ -1,8 +1,8 @@
 import 'dotenv-flow/config';
-import { DbDriver } from '../src/database';
-import { actions, commands, textHandlers } from '../src/handlers';
-import { LoggerService } from '../src/logger';
-import { TelegramBot } from '../src/telegram-bot';
+import { Chart } from '../src/modules/chart';
+import { DbDriver } from '../src/modules/database';
+import { Logger } from '../src/modules/logger';
+import { TelegramBot } from '../src/modules/telegram-bot';
 
 if (!process.env.BOT_TOKEN) {
     throw new Error('Environment variable `BOT_TOKEN` not provided');
@@ -20,20 +20,14 @@ if (!process.env.YDB_DATABASE) {
     throw new Error('Environment variable `YDB_DATABASE` not provided');
 }
 
-const logger = new LoggerService(process.env.ADMIN_CHAT_ID, process.env.BOT_TOKEN);
-const dbDriver = new DbDriver(process.env.YDB_ENDPOINT, process.env.YDB_DATABASE);
-const telegramBot = new TelegramBot(process.env.BOT_TOKEN, dbDriver, logger);
+const chart = new Chart();
+const logger = new Logger(process.env.ADMIN_CHAT_ID, process.env.BOT_TOKEN);
+const db = new DbDriver(process.env.YDB_ENDPOINT, process.env.YDB_DATABASE);
+const bot = new TelegramBot(process.env.BOT_TOKEN, { db, logger, chart });
 
-// register telegram bot handlers
-Object.entries(commands).forEach(([command, handler]) => telegramBot.registerCommand(command, handler));
-Object.entries(actions).forEach(([action, { trigger, handler }]) =>
-    telegramBot.registerAction(action, trigger, handler),
-);
-textHandlers.forEach((handler) => telegramBot.registerTextHandler(handler));
-
-telegramBot.launch();
+bot.launch();
 
 // Enable graceful stop
-process.once('SIGINT', () => telegramBot.stop('SIGINT'));
-process.once('SIGTERM', () => telegramBot.stop('SIGTERM'));
-process.once('SIGHUP', () => telegramBot.stop('SIGHUP'));
+process.once('SIGINT', () => bot.stop('SIGINT'));
+process.once('SIGTERM', () => bot.stop('SIGTERM'));
+process.once('SIGHUP', () => bot.stop('SIGHUP'));

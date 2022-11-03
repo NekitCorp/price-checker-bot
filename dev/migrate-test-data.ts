@@ -2,12 +2,12 @@
 import dayjs from 'dayjs';
 import 'dotenv-flow/config';
 import { Session } from 'ydb-sdk';
-import { DbDriver } from '../src/database';
-import { ChatState } from '../src/database/entities/chat-state';
-import { Price } from '../src/database/entities/price';
-import { Product, ProductId } from '../src/database/entities/product';
-import { ChatId, Subscription } from '../src/database/entities/subscription';
-import { Store } from '../src/store/types';
+import { DbDriver } from '../src/modules/database';
+import { ChatState } from '../src/modules/database/entities/chat-state';
+import { Price } from '../src/modules/database/entities/price';
+import { Product, ProductId } from '../src/modules/database/entities/product';
+import { ChatId, Subscription } from '../src/modules/database/entities/subscription';
+import { Store } from '../src/modules/store/types';
 import { randomNumber } from '../src/utils/number';
 
 if (!process.env.YDB_ENDPOINT) {

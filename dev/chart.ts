@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
-import { Chart, IChartData } from '../src/modules/chart';
 import fs from 'fs/promises';
+import { Chart } from '../src/modules/chart';
+import { IChartData } from '../src/modules/chart/types';
 
 const chart = new Chart();
 const data: IChartData = [
