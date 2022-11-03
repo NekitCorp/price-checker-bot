@@ -12,8 +12,8 @@ jobs:
             matrix:
                 node-version: [16.x]
         steps:
-            - uses: actions/checkout@v2
-            - uses: actions/setup-node@v2
+            - uses: actions/checkout@v3
+            - uses: actions/setup-node@v3
               with:
                   node-version: ${{ matrix.node-version }}
             # Install dependencies
@@ -26,7 +26,7 @@ jobs:
             - run: cp package.json build/package.json
             - run: cp package-lock.json build/package-lock.json
             # Deploy
-            - uses: goodsmileduck/yandex-serverless-action@v1
+            - uses: goodsmileduck/yandex-serverless-action@v2
               with:
                   token: ${{ secrets.OAUTH_TOKEN }}
                   function_id: ${{ secrets.CLOUD_FUNCTION_ID }}
