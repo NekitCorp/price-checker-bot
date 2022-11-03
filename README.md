@@ -16,7 +16,7 @@ docker run -d --rm --name ydb-local -h localhost \
   cr.yandex/yc/yandex-docker-local-ydb:latest
 ```
 
-2. Выполнить скрипт миграции `database/migrate.sql` в [YDB UI](http://localhost:8765/) или с помощью `ydb-cli`:
+2. Выполнить скрипт миграции [migrate.sql](src/modules/database/migrate.sql) в [YDB UI](http://localhost:8765/) или с помощью [ydb-cli](https://ydb.tech/ru/docs/reference/ydb-cli/):
 
 ```sh
 ydb -e grpc://localhost:2136 -d /local yql -f ./src/modules/database/migrate.sql
@@ -67,15 +67,14 @@ npm run dev:chart
 
 Добавить `Actions secrets`:
 
-| Secret               | Description                                                                                                                                                                                         |
-| -------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `BOT_TOKEN`          | Токен, который был получен от `BotFather` при создании бота.                                                                                                                                        |
-| `CLOUD_FUNCTION_ID`  | Идентификатор функции `price-checker-bot-function`.                                                                                                                                                 |
-| `OAUTH_TOKEN`        | Получите OAuth-токен в сервисе Яндекс.OAuth. Для этого перейдите по [ссылке](https://oauth.yandex.ru/authorize?response_type=token&client_id=1a6990aa636648e9b2ef855fa7bec2fb) и нажмите Разрешить. |
-| `SERVICE_ACCOUNT_ID` | Идентификатор сервисного аккаунта `price-checker-bot-sa`.                                                                                                                                           |
-| `YDB_DATABASE`       | Размещение базы данных `price-checker-bot-ydb`.                                                                                                                                                     |
-| `YDB_ENDPOINT`       | Эндпоинт `price-checker-bot-ydb`.                                                                                                                                                                   |
-| `ADMIN_CHAT_ID`      | Идентификатор телеграм чата администратора для сбора ошибок.                                                                                                                                        |
+| Secret                   | Description                                                                                                                                                                                                   |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `YC_SA_JSON_CREDENTIALS` | Должен содержать JSON с авторизованным ключом для сервисного аккаунта. Более подробно на [Yandex Cloud IAM documentation](https://cloud.yandex.ru/docs/container-registry/operations/authentication#sa-json). |
+| `YC_FOLDER_ID`           | Идентификатор каталога `price-checker-bot`.                                                                                                                                                                   |
+| `YDB_DATABASE`           | Размещение базы данных `price-checker-bot-ydb`.                                                                                                                                                               |
+| `YDB_ENDPOINT`           | Эндпоинт `price-checker-bot-ydb`.                                                                                                                                                                             |
+| `TG_BOT_TOKEN`           | Токен, который был получен от `BotFather` при создании бота.                                                                                                                                                  |
+| `TG_ADMIN_CHAT_ID`       | Идентификатор телеграм чата администратора для сбора ошибок.                                                                                                                                                  |
 
 ### Инициализация Telegram
 

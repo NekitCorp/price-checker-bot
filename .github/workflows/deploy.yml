@@ -1,39 +1,45 @@
 name: Deploy
 
 on:
-    push:
-        branches:
-            - main
+  push:
+    branches:
+      - main
 
 jobs:
-    deploy:
-        runs-on: ubuntu-latest
-        strategy:
-            matrix:
-                node-version: [16.x]
-        steps:
-            - uses: actions/checkout@v3
-            - uses: actions/setup-node@v3
-              with:
-                  node-version: ${{ matrix.node-version }}
-            # Install dependencies
-            - run: npm ci
-            # Lint
-            - run: npm run check:tsc
-            - run: npm run check:lint
-            # Build
-            - run: npm run build
-            - run: cp package.json build/package.json
-            - run: cp package-lock.json build/package-lock.json
-            # Deploy
-            - uses: goodsmileduck/yandex-serverless-action@v1
-              with:
-                  token: ${{ secrets.OAUTH_TOKEN }}
-                  function_id: ${{ secrets.CLOUD_FUNCTION_ID }}
-                  runtime: 'nodejs16'
-                  entrypoint: 'index.handler'
-                  environment: BOT_TOKEN=${{ secrets.BOT_TOKEN }},YDB_DATABASE=${{ secrets.YDB_DATABASE }},YDB_ENDPOINT=${{ secrets.YDB_ENDPOINT }},ADMIN_CHAT_ID=${{ secrets.ADMIN_CHAT_ID }}
-                  memory: '128'
-                  source: './build'
-                  execution_timeout: '60'
-                  service_account: ${{ secrets.SERVICE_ACCOUNT_ID }}
+  deploy:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [16.x]
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+      # Install dependencies
+      - run: npm ci
+      # Lint
+      - run: npm run check:tsc
+      - run: npm run check:lint
+      # Build
+      - run: npm run build
+      - run: cp package.json build/package.json
+      - run: cp package-lock.json build/package-lock.json
+      # Deploy
+      - name: Deploy Function
+        id: sls-func
+        uses: yc-actions/yc-sls-function@v2
+        with:
+          yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
+          folder-id: ${{ secrets.YC_FOLDER_ID }}
+          function-name: price-checker-bot-function
+          runtime: nodejs16
+          memory: 256Mb
+          execution-timeout: 60
+          entrypoint: index.handler
+          environment: |
+            TG_BOT_TOKEN=${{ secrets.TG_BOT_TOKEN }}
+            TG_ADMIN_CHAT_ID=${{ secrets.TG_ADMIN_CHAT_ID }}
+            YDB_DATABASE=${{ secrets.YDB_DATABASE }}
+            YDB_ENDPOINT=${{ secrets.YDB_ENDPOINT }}
+          include: ./build
