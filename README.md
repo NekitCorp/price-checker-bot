@@ -23,22 +23,19 @@ ydb -e grpc://localhost:2136 -d /local yql -f ./src/modules/database/migrate.sql
 ```
 
 3. Создать `.env.local` в корне проекта с заполненными переменными окружения из `.env`
-4. [`optional`] Мигрировать тестовые данные
+4. Тестовые команды для разработки
 
 ```sh
+# Миграция тестовых данных
 npm run dev:migrate-test-data
-```
-
-5. Запустить телеграм-бота
-
-```sh
+# Запустить телеграм-бота
 npm run dev:start-bot
-```
-
-6. [`optional`] Имитировать ежедневный триггер
-
-```sh
+# Имитировать ежедневный триггер
 npm run dev:trigger
+# Запуск провайдеров данных для магазина
+npm run dev:store-provider
+# Генерация графика цен
+npm run dev:chart
 ```
 
 ## Инициализация
