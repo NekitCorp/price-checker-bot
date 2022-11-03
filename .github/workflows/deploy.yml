@@ -32,6 +32,7 @@ jobs:
         with:
           yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
           folder-id: ${{ secrets.YC_FOLDER_ID }}
+          service-account: ${{ secrets.YC_SA_JSON_CREDENTIALS.service_account_id }}
           function-name: price-checker-bot-function
           runtime: nodejs16
           memory: 256Mb
