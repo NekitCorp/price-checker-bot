@@ -4,7 +4,7 @@ import { Store } from '../../../store/types';
 import { ActionHandler } from '../../types';
 import { Action } from '../types';
 
-export const addActionHandler: ActionHandler = async ({ ctx, services: { db, logger } }) => {
+export const addActionHandler: ActionHandler = async ({ ctx, services: { db } }) => {
     const data = ctx.callbackQuery?.data;
     if (!data) {
         ctx.reply('❌ Ошибка. Не найдены данные callbackQuery.');
@@ -21,7 +21,7 @@ export const addActionHandler: ActionHandler = async ({ ctx, services: { db, log
 
     ctx.deleteMessage();
 
-    const storeProvider = getStoreProvider(store, logger);
+    const storeProvider = getStoreProvider(store);
     const message = `⌛ Пришлите мне ссылку с товаром.\n\n💡 Пример ссылки: ${storeProvider.exampleLink}`;
     ctx.reply(message, { disable_web_page_preview: true });
 };

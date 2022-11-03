@@ -17,7 +17,7 @@ const TEST_STORES: Record<Store, string[]> = {
 
 async function main() {
     for (const store in TEST_STORES) {
-        const storeProvider = getStoreProvider(store as Store, console);
+        const storeProvider = getStoreProvider(store as Store);
 
         for (const url of TEST_STORES[store as Store]) {
             console.log(`[${store}] Start check ${url}`);

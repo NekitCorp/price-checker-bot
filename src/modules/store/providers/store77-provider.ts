@@ -1,15 +1,12 @@
 import axios from 'axios';
 import https from 'https';
 import { HTMLElement, parse } from 'node-html-parser';
-import { ILogger } from '../../logger/types';
 import { IStoreProduct, IStoreProvider, Store } from '../types';
 
 // https://stackoverflow.com/questions/51363855/how-to-configure-axios-to-use-ssl-certificate
 const httpsAgent = new https.Agent({ rejectUnauthorized: false });
 
 export class Store77Provider implements IStoreProvider {
-    constructor(private logger: ILogger) {}
-
     public name = 'Store77';
     public exampleLink =
         'https://store77.net/apple_iphone_13_pro_max/telefon_apple_iphone_13_pro_max_128gb_alpine_green_mncp3ll_a/';
@@ -24,7 +21,6 @@ export class Store77Provider implements IStoreProvider {
             const response = await axios.get<string>(url, { httpsAgent });
             html = response.data;
         } catch (error) {
-            this.logger.error(error, { scope: 'ERROR_STORE77_GET_PAGE' });
             throw new Error('Не удалось получить страницу.');
         }
 
@@ -32,7 +28,6 @@ export class Store77Provider implements IStoreProvider {
         try {
             dom = parse(html);
         } catch (error) {
-            this.logger.error(error, { scope: 'ERROR_STORE77_PARSE_PAGE' });
             throw new Error('Не удалось разобрать страницу.');
         }
 

@@ -10,13 +10,19 @@ export class Logger implements ILogger {
     }
 
     error(error: unknown, options: ILoggerErrorOptions) {
-        const update = options?.context?.update;
+        let message: string;
 
-        const errorObj =
-            error instanceof Error
-                ? { message: error.message, stack: error.stack, update }
-                : { message: `${error}`, update };
-        const message = `[${options.scope}] ${JSON.stringify(errorObj)}`;
+        if ('customMessage' in options) {
+            message = `${error}`;
+        } else {
+            const update = options?.context?.update;
+            const errorObj =
+                error instanceof Error
+                    ? { message: error.message, stack: error.stack, update }
+                    : { message: `${error}`, update };
+
+            message = `[${options.scope}] ${JSON.stringify(errorObj)}`;
+        }
 
         console.error(message);
 

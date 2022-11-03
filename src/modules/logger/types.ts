@@ -1,6 +1,6 @@
 import { Context } from 'telegraf';
 
-export type ILoggerErrorOptions = { context?: Context; scope: string };
+export type ILoggerErrorOptions = { context?: Context; scope: string } | { customMessage: true };
 export type ILoggerLogOptions = { scope: string };
 
 export type ILogger = {

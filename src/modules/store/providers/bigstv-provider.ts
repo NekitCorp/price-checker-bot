@@ -1,12 +1,9 @@
 import axios from 'axios';
 import iconv from 'iconv-lite';
 import { HTMLElement, parse } from 'node-html-parser';
-import { ILogger } from '../../logger/types';
 import { IStoreProduct, IStoreProvider, Store } from '../types';
 
 export class BigstvProvider implements IStoreProvider {
-    constructor(private logger: ILogger) {}
-
     public name = 'BIGSTV';
     public exampleLink = 'https://www.bigstv.ru/product/televizor-oled-sony-xr-65a80j/';
 
@@ -21,7 +18,6 @@ export class BigstvProvider implements IStoreProvider {
             const response = await axios.get<Buffer>(url, { responseType: 'arraybuffer' });
             html = iconv.decode(response.data, 'win1251');
         } catch (error) {
-            this.logger.error(error, { scope: 'ERROR_BIGSTV_GET_PAGE' });
             throw new Error('Не удалось получить страницу.');
         }
 
@@ -29,7 +25,6 @@ export class BigstvProvider implements IStoreProvider {
         try {
             dom = parse(html);
         } catch (error) {
-            this.logger.error(error, { scope: 'ERROR_BIGSTV_PARSE_PAGE' });
             throw new Error('Не удалось разобрать страницу.');
         }
 

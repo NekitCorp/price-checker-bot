@@ -50,9 +50,10 @@ export async function triggerHandler(bot: ITelegramBot, logger: ILogger, dbDrive
  */
 async function updatePrices(logger: ILogger, dbDriver: IDbDriver) {
     const products = await Product.getProductsWithSubscription(dbDriver);
+    const errors: Record<ProductId, unknown> = {};
 
     for await (const product of products) {
-        const storeProvider = getStoreProvider(product.store, logger);
+        const storeProvider = getStoreProvider(product.store);
 
         try {
             const { id, price } = await storeProvider.getData(product.url);
@@ -62,8 +63,17 @@ async function updatePrices(logger: ILogger, dbDriver: IDbDriver) {
 
             logger.log(`New price ${numberWithSpaces(price)} added for product ${id}.`, { scope: SCOPE });
         } catch (error) {
-            logger.error(error, { scope: `ERROR_TRIGGER_UPDATE_PRICE_${product.id}` });
+            errors[product.id] = error;
         }
+    }
+
+    if (Object.keys(errors).length) {
+        const message =
+            'Unable to update prices:\n' +
+            Object.entries(errors)
+                .map(([id, error]) => `[${id}]: ${error}`)
+                .join('\n');
+        logger.error(message, { customMessage: true });
     }
 }
 

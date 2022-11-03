@@ -21,7 +21,7 @@ export const textHandler: TextHandler = async (props) => {
 const addProductHandler: TextHandler = async ({ ctx, services: { db, logger } }) => {
     if (!ctx.chatState) return;
 
-    const storeProvider = getStoreProvider(ctx.chatState.store, logger);
+    const storeProvider = getStoreProvider(ctx.chatState.store);
 
     // Проверка ссылки
     if (!storeProvider.checkLink(ctx.message.text)) {
