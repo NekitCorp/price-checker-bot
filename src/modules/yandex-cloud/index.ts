@@ -8,7 +8,7 @@ import { isTriggerEvent } from './utils';
 export class YandexCloud implements IYandexCloud {
     constructor(private logger: ILogger, private db: IDbDriver, private bot: ITelegramBot) {}
 
-    public async handler(event: ICloudEvent): Promise<ICloudResponse> {
+    public handler = async (event: ICloudEvent): Promise<ICloudResponse> => {
         this.logger.log(event, { scope: 'CLOUD_EVENT' });
 
         const isTrigger = isTriggerEvent(event);
@@ -24,5 +24,5 @@ export class YandexCloud implements IYandexCloud {
             statusCode: 200,
             body: '',
         };
-    }
+    };
 }
