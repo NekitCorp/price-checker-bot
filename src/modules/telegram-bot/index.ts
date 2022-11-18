@@ -74,7 +74,7 @@ export class TelegramBot implements ITelegramBot {
 
     private registerAction(name: string, triggers: Triggers, handler: ActionHandler): void {
         this.bot.action(triggers, (ctx) => {
-            this.services.logger.log(`Start action ${name} processing...`, { scope: 'BOT_HANDLER' });
+            this.services.logger.log(`Start action ${name} processing...`);
             try {
                 return handler({ ctx, services: this.services });
             } catch (error) {
@@ -86,7 +86,7 @@ export class TelegramBot implements ITelegramBot {
 
     private registerTextHandler(handler: TextHandler): void {
         this.bot.on('text', (ctx) => {
-            this.services.logger.log(`Start text handler processing...`, { scope: 'BOT_HANDLER' });
+            this.services.logger.log(`Start text handler processing...`);
             try {
                 return handler({ ctx, services: this.services });
             } catch (error) {
