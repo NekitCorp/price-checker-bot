@@ -9,7 +9,7 @@ export class YandexCloud implements IYandexCloud {
     constructor(private logger: ILogger, private db: IDbDriver, private bot: ITelegramBot) {}
 
     public handler = async (event: ICloudEvent): Promise<ICloudResponse> => {
-        this.logger.log(event, { scope: 'CLOUD_EVENT' });
+        this.logger.log('Yandex cloud event', event);
 
         const isTrigger = isTriggerEvent(event);
         const message = event.body && JSON.parse(event.body);

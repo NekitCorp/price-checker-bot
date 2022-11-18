@@ -10,10 +10,8 @@ import { getStoreProvider } from '../store';
 import { ITelegramBot } from '../telegram-bot/types';
 import { escapeMessage } from './utils';
 
-const SCOPE = 'TRIGGER_HANDLER';
-
 export async function triggerHandler(bot: ITelegramBot, logger: ILogger, dbDriver: IDbDriver) {
-    logger.log('Trigger handler processing...', { scope: SCOPE });
+    logger.log('Trigger handler processing...');
 
     try {
         await updatePrices(logger, dbDriver);
@@ -21,11 +19,11 @@ export async function triggerHandler(bot: ITelegramBot, logger: ILogger, dbDrive
         const subscriptions = await getSubscriptions(dbDriver);
         const availableProducts = await getAvailableProducts(dbDriver);
 
-        logger.log(`Available products: ${Object.keys(availableProducts).join(',')}.`, { scope: SCOPE });
+        logger.log(`Available products: ${Object.keys(availableProducts).join(',')}.`);
 
         const messages = prepareMessages(subscriptions, availableProducts);
 
-        logger.log(`Messages to send: ${messages.map((m) => m.chatId).join(',')}.`, { scope: SCOPE });
+        logger.log(`Messages to send: ${messages.map((m) => m.chatId).join(',')}.`);
 
         await Promise.all(
             messages.map(async ({ chatId, message }) => {
@@ -34,14 +32,14 @@ export async function triggerHandler(bot: ITelegramBot, logger: ILogger, dbDrive
                         parse_mode: 'MarkdownV2',
                         disable_web_page_preview: true,
                     });
-                    logger.log(`Message ${chatId} sent successfully!`, { scope: SCOPE });
+                    logger.log(`Message ${chatId} sent successfully!`);
                 } catch (error) {
-                    logger.error(error, { scope: `${SCOPE}_ERROR_FAILED_SEND_MESSAGE` });
+                    logger.error(`Error sending message to chat ${chatId}`, error);
                 }
             }),
         );
     } catch (error) {
-        logger.error(error, { scope: 'TRIGGER_ERROR' });
+        logger.error('Error processing trigger handler.', error);
     }
 }
 
@@ -61,7 +59,7 @@ async function updatePrices(logger: ILogger, dbDriver: IDbDriver) {
 
             await priceEntity.insert(dbDriver);
 
-            logger.log(`New price ${numberWithSpaces(price)} added for product ${id}.`, { scope: SCOPE });
+            logger.log(`New price ${numberWithSpaces(price)} added for product ${id}.`, priceEntity);
         } catch (error) {
             errors[product.id] = error;
         }
@@ -73,7 +71,7 @@ async function updatePrices(logger: ILogger, dbDriver: IDbDriver) {
             Object.entries(errors)
                 .map(([id, error]) => `[${id}]: ${error}`)
                 .join('\n');
-        logger.error(message, { customMessage: true });
+        logger.error(message);
     }
 }
 

@@ -38,7 +38,7 @@ const addProductHandler: TextHandler = async ({ ctx, services: { db, logger } })
         product = Product.create({ id: id as ProductId, name, store, url });
         priceEntity = Price.create({ productId: id as ProductId, price });
     } catch (error) {
-        logger.error(error, { context: ctx, scope: 'ERROR_ADD_PRODUCT_HANDLER' });
+        logger.error('Error adding product.', { error: ctx });
         ctx.reply(`😭 Ошибка. ${error}`);
         return;
     }

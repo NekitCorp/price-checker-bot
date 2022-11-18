@@ -1,11 +1,16 @@
-import { Context } from 'telegraf';
-
-export type ILoggerErrorOptions = { context?: Context; scope: string } | { customMessage: true };
-export type ILoggerLogOptions = { scope: string };
+export enum LogLevel {
+    'TRACE' = 'TRACE',
+    'DEBUG' = 'DEBUG',
+    'INFO' = 'INFO',
+    'WARN' = 'WARN',
+    'ERROR' = 'ERROR',
+    'FATAL' = 'FATAL',
+}
 
 export type ILogger = {
-    error(error: unknown, options: ILoggerErrorOptions): void;
-    log(message: unknown, options: ILoggerLogOptions): void;
+    error(message: string, data?: unknown): void;
+    log(message: string, data?: unknown): void;
+    warn(message: string, data?: unknown): void;
     time(label?: string): void;
     timeEnd(label?: string): void;
 };

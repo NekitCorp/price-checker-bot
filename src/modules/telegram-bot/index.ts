@@ -33,15 +33,13 @@ export class TelegramBot implements ITelegramBot {
     public launch() {
         this.bot
             .launch()
-            .then(() =>
-                this.services.logger.log(`Telegram bot ${this.bot.botInfo?.first_name} is running.`, { scope: 'BOT' }),
-            );
+            .then(() => this.services.logger.log(`Telegram bot ${this.bot.botInfo?.first_name} is running.`));
     }
 
     public stop(reason?: string) {
-        this.services.logger.log(`Telegram bot ${this.bot.botInfo?.first_name} stops...`, { scope: 'BOT' });
+        this.services.logger.log(`Telegram bot ${this.bot.botInfo?.first_name} stops...`);
         this.bot.stop(reason);
-        this.services.logger.log(`Telegram bot ${this.bot.botInfo?.first_name} stopped.`, { scope: 'BOT' });
+        this.services.logger.log(`Telegram bot ${this.bot.botInfo?.first_name} stopped.`);
     }
 
     public async sendMessage(chatId: string | number, text: string, extra?: ExtraReplyMessage) {
@@ -49,17 +47,12 @@ export class TelegramBot implements ITelegramBot {
             return await this.bot.telegram.sendMessage(chatId, text, extra);
         } catch (err) {
             if (err instanceof TelegramError && err.code === 403) {
-                return this.services.logger.log(
+                return this.services.logger.warn(
                     `Failed to send a message to user ${chatId} because the bot was blocked.`,
-                    {
-                        scope: 'BOT_SEND_MESSAGE',
-                    },
                 );
             }
 
-            this.services.logger.error(`Failed to send message to user ${chatId}. ${err}.`, {
-                scope: 'ERROR_BOT_SEND_MESSAGE',
-            });
+            this.services.logger.error(`Failed to send message to user ${chatId}.`, err);
         }
     }
 
@@ -69,11 +62,11 @@ export class TelegramBot implements ITelegramBot {
 
     private registerCommand(command: string, handler: CommandHandler): void {
         this.bot.command(command, (ctx) => {
-            this.services.logger.log(`Start command /${command} processing...`, { scope: 'BOT_HANDLER' });
+            this.services.logger.log(`Start command /${command} processing...`);
             try {
                 return handler({ ctx, services: this.services });
             } catch (error) {
-                this.services.logger.error(error, { context: ctx, scope: 'ERROR_BOT_HANDLER' });
+                this.services.logger.error(`/${command} command processing error`, { error, ctx });
                 ctx.reply('😿 Похоже что-то пошло не так...');
             }
         });
@@ -85,7 +78,7 @@ export class TelegramBot implements ITelegramBot {
             try {
                 return handler({ ctx, services: this.services });
             } catch (error) {
-                this.services.logger.error(error, { context: ctx, scope: 'ERROR_BOT_HANDLER' });
+                this.services.logger.error(`/${name} action processing error`, { error, ctx });
                 ctx.reply('😿 Похоже что-то пошло не так...');
             }
         });
@@ -97,7 +90,7 @@ export class TelegramBot implements ITelegramBot {
             try {
                 return handler({ ctx, services: this.services });
             } catch (error) {
-                this.services.logger.error(error, { context: ctx, scope: 'ERROR_BOT_HANDLER' });
+                this.services.logger.error('Text handler processing error', { error, ctx });
                 ctx.reply('😿 Похоже что-то пошло не так...');
             }
         });
@@ -105,7 +98,7 @@ export class TelegramBot implements ITelegramBot {
 
     private registerMiddlewares() {
         this.bot.use(async (ctx, next) => {
-            this.services.logger.log(ctx.update, { scope: 'TELEGRAM_UPDATE' });
+            this.services.logger.log('Telegram update', ctx.update);
             this.services.logger.time(`Processing update ${ctx.update.update_id}`);
             await next();
             this.services.logger.timeEnd(`Processing update ${ctx.update.update_id}`);

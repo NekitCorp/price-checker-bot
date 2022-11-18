@@ -1,7 +1,8 @@
 /* eslint-disable no-console */
 import { Telegraf } from 'telegraf';
-import { ILoggerErrorOptions, ILoggerLogOptions, ILogger } from './types';
+import { ILogger, LogLevel } from './types';
 
+// https://cloud.yandex.ru/docs/functions/concepts/logs#structured-logs
 export class Logger implements ILogger {
     private readonly bot: Telegraf;
 
@@ -9,33 +10,33 @@ export class Logger implements ILogger {
         this.bot = new Telegraf(botToken);
     }
 
-    error(error: unknown, options: ILoggerErrorOptions) {
-        let message: string;
+    error(message: string, data?: unknown) {
+        const msg = JSON.stringify({ message, level: LogLevel.ERROR, data });
 
-        if ('customMessage' in options) {
-            message = `${error}`;
-        } else {
-            const update = options?.context?.update;
-            const errorObj =
-                error instanceof Error
-                    ? { message: error.message, stack: error.stack, update }
-                    : { message: `${error}`, update };
-
-            message = `[${options.scope}] ${JSON.stringify(errorObj)}`;
-        }
-
-        console.error(message);
+        console.error(msg);
 
         this.bot.telegram
-            .sendMessage(this.adminChatId, message)
-            .catch((err) => console.error(`[ERROR] Failed to send error message`, err?.message));
+            .sendMessage(this.adminChatId, msg)
+            .catch((err) =>
+                console.error(
+                    JSON.stringify({ message: 'Failed to send error message', level: LogLevel.FATAL, data: err }),
+                ),
+            );
     }
 
-    log(message: unknown, options: ILoggerLogOptions) {
+    log(message: string, data?: unknown) {
         try {
-            console.log(`[${options.scope}] ${JSON.stringify(message)}`);
+            console.log(JSON.stringify({ message, level: LogLevel.INFO, data }));
         } catch (error) {
-            this.error(error, { scope: `LOG_ERROR_${options.scope}` });
+            this.error('Failed to INFO log.', error);
+        }
+    }
+
+    warn(message: string, data?: unknown) {
+        try {
+            console.log(JSON.stringify({ message, level: LogLevel.WARN, data }));
+        } catch (error) {
+            this.error('Failed to WARN log.', error);
         }
     }
 
