@@ -1,12 +1,12 @@
-# Price checker telegram bot
+# 🤖🏷️ Price checker telegram bot
 
-Телеграм бот для отслеживания изменения цен на определенные товары в магазинах.
+Telegram bot to track price changes for certain goods in stores.
 
-## Разработка
+## 👨‍💻 Development
 
-Для локальной разработки необходимо:
+For local development you need:
 
-1. [Запустить YDB в Docker](https://cloud.yandex.ru/docs/ydb/getting_started/self_hosted/ydb_docker)
+1. [Running YDB in Docker](https://ydb.tech/en/docs/getting_started/self_hosted/ydb_docker)
 
 ```sh
 docker pull cr.yandex/yc/yandex-docker-local-ydb:latest
@@ -16,70 +16,70 @@ docker run -d --rm --name ydb-local -h localhost \
   cr.yandex/yc/yandex-docker-local-ydb:latest
 ```
 
-2. Выполнить скрипт миграции [migrate.sql](src/modules/database/migrate.sql) в [YDB UI](http://localhost:8765/) или с помощью [ydb-cli](https://ydb.tech/ru/docs/reference/ydb-cli/):
+2. Run migration script [migrate.sql](src/modules/database/migrate.sql) in [YDB UI](http://localhost:8765/) or by using [ydb-cli](https://ydb.tech/en/docs/reference/ydb-cli/)
 
 ```sh
 ydb -e grpc://localhost:2136 -d /local yql -f ./src/modules/database/migrate.sql
 ```
 
-3. Создать `.env.local` в корне проекта с заполненными переменными окружения из `.env`
-4. Тестовые команды для разработки
+3. Create `.env.local` at the root of the project with environment variables filled in from `.env`
+4. Use test commands for development
 
 ```sh
-# Миграция тестовых данных
+# Migrate test data
 npm run dev:migrate-test-data
-# Запустить телеграм-бота
+# State telegram bot
 npm run dev:start-bot
-# Имитировать ежедневный триггер
+# Simulate daily trigger
 npm run dev:trigger
-# Запуск провайдеров данных для магазина
+# Launching store data provider
 npm run dev:store-provider
-# Генерация графика цен
+# Price chart generation
 npm run dev:chart
 ```
 
-## Инициализация
+## 🚀 Initialization
 
-> Инициализация проводится 1 раз при создании проекта, либо при переезде проекта в другой каталог облака. Для разработки в уже развернутом проекта данный пункт выполнять не нужно.
+### Yandex Cloud initialization
 
-### Инициализация Yandex Cloud
+> Initialization is carried out 1 time when creating a project, or when moving a project to another cloud directory. For development in an already deployed project, this item is not necessary.
 
-1. Создать каталог в [консоли Yandex Cloud](https://console.cloud.yandex.ru/cloud)
-    - Имя: `price-checker-bot`
-2. Создать сервисный аккаунт
-    - Имя: `price-checker-bot-sa`
-    - Роль: `editor`
-3. Создать `Yandex Database`
-    - Имя: `price-checker-bot-ydb`
-    - Тип базы данных: `Serverless`
-4. Выполнить скрипт миграции `database/migrate.sql` в консоли `price-checker-bot-ydb`
-5. Создать `Cloud Function`
-    - Имя: `price-checker-bot-function`
-6. Сделать функцию `price-checker-bot-function` публичной
-7. Создать триггер внутри функции `price-checker-bot-function`
-    - Имя: `price-checker-bot-trigger`
-    - Тип: `Таймер`
-    - Cron-выражение: `0 7 ? * * *` ([Формат cron-выражения](https://cloud.yandex.ru/docs/functions/concepts/trigger/timer#cron-expression))
-    - Функция: `price-checker-bot-function`
-    - Сервисный аккаунт: `price-checker-bot-sa`
+1. Create folder in [Yandex Cloud console](https://console.cloud.yandex.ru/cloud)
+    - Name: `price-checker-bot`
+2. Create service account
+    - Name: `price-checker-bot-sa`
+    - Role: `editor`
+3. Create `Yandex Database`
+    - Name: `price-checker-bot-ydb`
+    - Database type: `Serverless`
+4. Run migration script `database/migrate.sql` in `price-checker-bot-ydb` console
+5. Create `Cloud Function`
+    - Name: `price-checker-bot-function`
+6. Make the `price-checker-bot-function` function public
+7. Create a trigger inside function `price-checker-bot-function`
+    - Name: `price-checker-bot-trigger`
+    - Type: `Таймер`
+    - Cron-expression: `0 7 ? * * *` ([cron-expression format](https://cloud.yandex.com/en/docs/functions/concepts/trigger/timer#cron-expression))
+    - Function: `price-checker-bot-function`
+    - Service account: `price-checker-bot-sa`
 
-### Инициализация GitHub
+### GitHub initialization
 
-Добавить `Actions secrets`:
+Add `Actions secrets`:
 
-| Secret                   | Description                                                                                                                                                                                                   |
-| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `YC_SA_JSON_CREDENTIALS` | Должен содержать JSON с авторизованным ключом для сервисного аккаунта. Более подробно на [Yandex Cloud IAM documentation](https://cloud.yandex.ru/docs/container-registry/operations/authentication#sa-json). |
-| `YC_FOLDER_ID`           | Идентификатор каталога `price-checker-bot`.                                                                                                                                                                   |
-| `YC_SERVICE_ACCOUNT_ID`  | Идентификатор сервисного аккаунта `price-checker-bot-sa`.                                                                                                                                                     |
-| `YDB_DATABASE`           | Размещение базы данных `price-checker-bot-ydb`.                                                                                                                                                               |
-| `YDB_ENDPOINT`           | Эндпоинт `price-checker-bot-ydb`.                                                                                                                                                                             |
-| `TG_BOT_TOKEN`           | Токен, который был получен от `BotFather` при создании бота.                                                                                                                                                  |
-| `TG_ADMIN_CHAT_ID`       | Идентификатор телеграм чата администратора для сбора ошибок.                                                                                                                                                  |
+| Secret                   | Description                                                                                                                                                                                                 |
+| ------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `YC_SA_JSON_CREDENTIALS` | Must contain JSON with the authorized key for the service account. More details at [Yandex Cloud IAM documentation](https://cloud.yandex.com/en/docs/container-registry/operations/authentication#sa-json). |
+| `YC_FOLDER_ID`           | Folder ID `price-checker-bot`.                                                                                                                                                                              |
+| `YC_SERVICE_ACCOUNT_ID`  | Service account ID `price-checker-bot-sa`.                                                                                                                                                                  |
+| `YDB_DATABASE`           | YDB location `price-checker-bot-ydb`.                                                                                                                                                                       |
+| `YDB_ENDPOINT`           | YDB endpoint `price-checker-bot-ydb`.                                                                                                                                                                       |
+| `TG_BOT_TOKEN`           | Token you got from `BotFather` when you created your Bot.                                                                                                                                                   |
+| `TG_ADMIN_CHAT_ID`       | Administrator's telegram chat ID for collecting logs.                                                                                                                                                       |
 
-### Инициализация Telegram
+### Telegram initialization
 
-1. Создаем бота у [BotFather](https://t.me/BotFather)
-2. Переходим по ссылке `https://api.telegram.org/bot{my_bot_token}/setWebhook?url={url_to_send_updates_to}` для установки webhook'а, где:
-    - `my_bot_token`: токен, который был получен от `BotFather` при создании бота
-    - `url_to_send_updates_to`: ссылка для вызова функции `price-checker-bot-function`
+1. Create a bot using [BotFather](https://t.me/BotFather)
+2. Call the `setWebHook` method in the Bot API via the following url `https://api.telegram.org/bot{my_bot_token}/setWebhook?url={url_to_send_updates_to}` where:
+    - `my_bot_token` is the token you got from `BotFather` when you created your Bot
+    - `url_to_send_updates_to` function `price-checker-bot-function` invoke url
