@@ -58,7 +58,7 @@ npm run dev:chart
 6. Make the `price-checker-bot-function` function public
 7. Create a trigger inside function `price-checker-bot-function`
     - Name: `price-checker-bot-trigger`
-    - Type: `Таймер`
+    - Type: `Timer`
     - Cron-expression: `0 7 ? * * *` ([cron-expression format](https://cloud.yandex.com/en/docs/functions/concepts/trigger/timer#cron-expression))
     - Function: `price-checker-bot-function`
     - Service account: `price-checker-bot-sa`
